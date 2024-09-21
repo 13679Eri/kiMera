@@ -19,7 +19,7 @@ SONIC_I2C sensor;
 //MIDI
 #include "M5UnitSynth.h"
 M5UnitSynth synth;
-int note_color[4] = {1 , 41, 57, 74};
+int note_color[4] = {1, 41, 57, 74};
 int nc = 0;
 
 #define DEVICE_NAME  "KIMERA"
