@@ -67,6 +67,7 @@ void trumpet() {
   //  M5.Lcd.printf("patern=%d", patern);
   //  M5.Lcd.setCursor(35, 175);
   //  M5.Lcd.printf("note=%d", note);
+}
 
 
 // PDM初期化

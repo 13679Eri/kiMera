@@ -1,4 +1,3 @@
-
 int split(String data, char delimiter, String * dst) {
   int index = 0;
   int datalength = data.length();
