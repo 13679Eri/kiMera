@@ -1,3 +1,6 @@
+//エッジインパルスを使えるかどうか
+//防音シートを増やす
+
 void set_trumpet() {
   M5.Lcd.fillRect(30, 14, 150, 200, 0xff0d);
   M5.Lcd.fillTriangle(60, 75, 90, 90, 60, 105, YELLOW);

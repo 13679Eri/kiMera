@@ -1,3 +1,8 @@
+//シリアルで加速度受け取るのやめて遅延が改善されるか
+//超音波読み取るタイミングを戻して遅延が改善されるか
+//Pa.hubにして遅延が改善されるか
+//手前の弦の方も情報を増やす
+
 void set_violin() {
   M5.Lcd.fillRect(30, 14, 150, 200, 0xff0d);
   M5.Lcd.fillCircle(110, 90, 30, 0xcb24);
@@ -12,8 +17,6 @@ void violin() {
   M5.update();
   ch = 2;
   synth.setInstrument(0, 2, note_color[1]);
-  //  M5.Lcd.setCursor(35, 215);
-  //  M5.Lcd.printf("mode=%d", mode);
 
   //IMU
   imu6886.getGyroData(&gyroX, &gyroY, &gyroZ);
@@ -21,8 +24,6 @@ void violin() {
 
   //角度
   angle = atan2(accX, accZ) * 180.0 / PI;
-  //  M5.Lcd.setCursor(35, 125);
-  //  M5.Lcd.printf("angle=%f", angle);
 
   //joystick
   Wire.requestFrom(JOY_ADDR, 3);  //Request 3 bytes from the slave device.  向从设备请求3个字节
@@ -31,10 +32,8 @@ void violin() {
     y_data = Wire.read();
     button_data = Wire.read();
   }
-  delay(10);
 
   if (120 <= x_data && x_data <= 130) {
-    //    flag = 0;
     note = -1;
     //止める
     synth.setAllNotesOff(2);
@@ -49,7 +48,6 @@ void violin() {
     }
     angle += mainbody_ag;
     distan = sensor.getDistance() / 10;
-    delay(10);
 
     note = violin_Pitch(angle, distan);
     if (prev_note != note) {
@@ -71,7 +69,6 @@ void violin() {
 
     note = violin_Pitch(angle, distan);
     if (prev_note != note) {
-      //      flag = 2;
       synth.setNoteOff(ch, prev_note, 0);
       synth.setNoteOn(ch, note, 127);
       prev_note = note;
