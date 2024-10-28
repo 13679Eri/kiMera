@@ -10,12 +10,11 @@ void set_sensor() {
 
   //気圧
   if (!lps35hw.begin_I2C()) {
-    //if (!lps35hw.begin_SPI(LPS_CS)) {
-    //if (!lps35hw.begin_SPI(LPS_CS, LPS_SCK, LPS_MISO, LPS_MOSI)) {
     Serial.println("Couldn't find LPS35HW chip");
     while (1);
   }
   Serial.println("Found LPS35HW chip");
+  lps35hw.zeroPressure();
 }
 
 void flute() {
@@ -44,24 +43,12 @@ void flute() {
     }
   }
 
-  //基準気圧の更新
-  float preChange = readPreChange();
-  Serial.println(preChange);
-  if (abs(preChange) < 0.09) {
-    if (currentMillis - updatetime >= Interval) {
-      update_bspre();
-      updatetime = currentMillis;
-    }
-  } else {
-    updatetime = currentMillis;
-  }
-
   //吹く
-  if (preChange > 0.10) {
+  if (pressure > 0.10) {
     note = flute_note();
     if (prev_note != note) {
       ring = 1;
-      velo = PreChangeToVolume(preChange);
+      velo = PreChangeToVolume(pressure);
       if (velo > 127) {
         velo = 127;
       }
@@ -84,17 +71,6 @@ void flute() {
 int PreChangeToVolume(float preChange) {
   // 圧力変化を音量にマップ（適宜調整）
   return map(preChange, -1, 1, 0, 127);
-}
-
-void update_bspre() {
-  baselinePressure = lps35hw.readPressure();
-  //  Serial.print("Updated Baseline Pressure: ");
-  //  Serial.println(baselinePressure);
-}
-
-float readPreChange() {
-  float currentPre = lps35hw.readPressure();
-  return currentPre - baselinePressure;  // 圧力変化を計算
 }
 
 int flute_note() {
