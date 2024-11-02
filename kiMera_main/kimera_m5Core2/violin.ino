@@ -19,6 +19,7 @@ void violin() {
   synth.setInstrument(0, 2, note_color[1]);
 
   //IMU
+  tca.selectChannel(IMU_CHANNEL);
   imu6886.getGyroData(&gyroX, &gyroY, &gyroZ);
   imu6886.getAccelData(&accX, &accY, &accZ);
 
@@ -26,6 +27,7 @@ void violin() {
   angle = atan2(accX, accZ) * 180.0 / PI;
 
   //joystick
+  tca.selectChannel(JOY_CHANNEL);
   Wire.requestFrom(JOY_ADDR, 3);  //Request 3 bytes from the slave device.  向从设备请求3个字节
   if (Wire.available()) {  //If data is received.  如果接收到数据
     x_data = Wire.read();
@@ -47,6 +49,7 @@ void violin() {
       mainbody_ag = receivedData.toFloat();
     }
     angle += mainbody_ag;
+    tca.selectChannel(ULTRASONIC_CHANNEL);
     distan = sensor.getDistance() / 10;
 
     note = violin_Pitch(angle, distan);
@@ -64,8 +67,9 @@ void violin() {
       mainbody_ag = receivedData.toFloat();
     }
     angle += mainbody_ag;
+    tca.selectChannel(ULTRASONIC_CHANNEL);
     distan = sensor.getDistance() / 10;
-    delay(10);
+//    delay(10);:
 
     note = violin_Pitch(angle, distan);
     if (prev_note != note) {

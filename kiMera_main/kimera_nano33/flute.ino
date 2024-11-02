@@ -44,7 +44,7 @@ void flute() {
   }
 
   //吹く
-  if (pressure > 0.10) {
+  if (pressure > 0.50) {
     note = flute_note();
     if (prev_note != note) {
       ring = 1;
@@ -70,7 +70,7 @@ void flute() {
 
 int PreChangeToVolume(float preChange) {
   // 圧力変化を音量にマップ（適宜調整）
-  return map(preChange, -1, 1, 0, 127);
+  return map(preChange, 0.5, 2, 0, 127);
 }
 
 int flute_note() {

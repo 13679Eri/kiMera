@@ -2,8 +2,15 @@
 
 //センサ
 //ヴァイオリン
+//pa.hub
+#include "ClosedCube_TCA9548A.h"
 #include <Unit_Sonic.h>　　//超音波
 #include "IMU_6886.h"　　　//加速度
+
+ClosedCube::Wired::TCA9548A tca;
+const uint8_t JOY_CHANNEL = 0;       // ジョイスティックを接続するチャンネル
+const uint8_t ULTRASONIC_CHANNEL = 1; // 超音波センサを接続するチャンネル
+const uint8_t IMU_CHANNEL = 2;       // 加速度センサを接続するチャンネル
 
 IMU_6886 imu6886; //加速度
 SONIC_I2C sensor; //超音波
@@ -85,7 +92,7 @@ void loop() {
   // モードが変更された場合のみセット関数を呼び出す
   if (mode != previousMode) {
     Serial1.write(mode);
-    for (int i = 0; i < 4; i++) {
+    for (int i = 1; i <= 4; i++) {
       synth.setAllNotesOff(i);
       //      M5.Lcd.setCursor(35, 100);
       //      M5.Lcd.print("AllNoteoff");

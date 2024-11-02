@@ -10,8 +10,23 @@ void set_sensor() {
   }
 
   //センサ Wire: SDA SCL
-  Wire.begin(21, 22); //joy
-  sensor.begin(&Wire, 0x57, 21, 22, 400000L); //超音波
-  imu6886.Init(21, 22); //加速度
-  InitI2SMic(); //PDM
+  Wire.begin(21, 22); //pa.hub
+
+  // Pa.Hubの初期化
+  tca.address(0x70); // Pa.Hubのデフォルトアドレス
+  // ジョイスティックの初期化
+  tca.selectChannel(JOY_CHANNEL);
+  Wire.beginTransmission(0x52);
+  Wire.endTransmission();
+
+  // 超音波センサの初期化
+  tca.selectChannel(ULTRASONIC_CHANNEL);
+  sensor.begin(&Wire, 0x57);
+
+  // 加速度センサの初期化
+  tca.selectChannel(IMU_CHANNEL);
+  imu6886.Init(21, 22);
+
+  //PDM
+  InitI2SMic();
 }
