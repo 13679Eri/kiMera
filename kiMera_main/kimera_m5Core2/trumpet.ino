@@ -2,6 +2,10 @@
 //防音シートを増やす
 
 void set_trumpet() {
+  set_sensor();
+  ch = 3;
+  synth.setInstrument(0, ch, note_color[2]);
+  
   M5.Lcd.fillRect(30, 14, 150, 200, 0xff0d);
   M5.Lcd.fillTriangle(60, 75, 90, 90, 60, 105, YELLOW);
   M5.Lcd.fillRect(85, 88, 80, 4, YELLOW);
@@ -15,8 +19,7 @@ void set_trumpet() {
 
 void trumpet() {
   M5.update();
-  ch = 3;
-  synth.setInstrument(0, ch, note_color[2]);
+
   //  M5.Lcd.setCursor(35, 215);
   //  M5.Lcd.printf("mode=%d", mode);
 

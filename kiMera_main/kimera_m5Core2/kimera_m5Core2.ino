@@ -25,8 +25,10 @@ float gyroX = 0;
 float gyroY = 0;
 float gyroZ = 0;
 
+float previousDistan = 0;
 float distan = 0;
 float angle = 0;
+uint8_t prev_x_data;
 uint8_t x_data, y_data, button_data;
 bool chord = false;
 float mainbody_ag = 0;
@@ -81,7 +83,7 @@ void setup() {
 
   //ボタン
   set_button();
-  
+
   //センサ 超音波 加速度 JOYSTICK PDM MIDI
   set_sensor();
 }
