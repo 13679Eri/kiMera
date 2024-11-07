@@ -70,7 +70,7 @@ void flute() {
 
 int PreChangeToVolume(float preChange) {
   // 圧力変化を音量にマップ（適宜調整）
-  return map(preChange, 0.5, 2, 0, 127);
+  return map(preChange, 0.5, 1.5, 63, 127);
 }
 
 int flute_note() {
@@ -86,115 +86,256 @@ int flute_note() {
 
   // 指遣いに対応するノート番号を設定
   switch (fingerPattern) {
-    case 0b111100101101:
-      return 60;
+    case 0b111101100111:
+      return 59;//B
       break;
-    case 0b111100100101:
-      return 62;
+    case 0b111100100111:
+      return 60;//C
+      break;
+    case 0b111110100111:
+      return 61;//C#
+      break;
+    case 0b111101100011:
+      return 61;//C#
+      break;
+    case 0b111100100011:
+      return 62;//D
+      break;
+    case 0b111110100011:
+      return 63;//D#
+      break;
+    case 0b111101100001:
+      return 63;//D#
       break;
     case 0b111100100001:
-      return 64;
+      return 64;//E
+      break;
+    case 0b111101100000:
+      return 64;//E
+      break;
+    case 0b111110100001:
+      return 65;//F
       break;
     case 0b111100100000:
-      return 65;
+      return 65;//F
+      break;
+    case 0b111110100000:
+      return 66;//F#
+      break;
+    case 0b111001100000:
+      return 66;//F#
       break;
     case 0b111000100000:
-      return 67;
+      return 67;//G
+      break;
+    case 0b111010100000:
+      return 68;//G#
+      break;
+    case 0b110001100000:
+      return 68;//G#
       break;
     case 0b110000100000:
-      return 69;
+      return 69;//A
+      break;
+    case 0b110010100000:
+      return 70;//A#
+      break;
+    case 0b100001100000:
+      return 70;//A#
       break;
     case 0b100000100000:
-      return 71;
+      return 71;//B
       break;
-
-    //次のオクターブ
-
+    case 0b010001100000:
+      return 71;//B
+      break;
+    case 0b100010100000:
+      return 72;//C
+      break;
     case 0b010000100000:
-    case 0b111100011101:
-      return 72;
+      return 72;//C
+      break;
+    case 0b010010100000:
+      return 73;//C#
+      break;
+    case 0b000001100000:
+      return 73;//C#
       break;
     case 0b000000100000:
-    case 0b111100010101:
-      return 74;
+      return 74;//D
+      break;
+    case 0b000010100000:
+      return 75;//D#
+      break;
+
+    //次のオクターブ
+    case 0b111101010111:
+      return 71;//B
+      break;
+    case 0b111100010111:
+      return 72;//C
+      break;
+    case 0b111110010111:
+      return 73;//C#
+      break;
+    case 0b111101010011:
+      return 73;//C#
+      break;
+    case 0b111100010011:
+      return 74;//D
+      break;
+    case 0b111110010011:
+      return 75;//D#
+      break;
+    case 0b111101010001:
+      return 75;//D#
       break;
     case 0b111100010001:
-      return 76;
+      return 76;//E
+      break;
+    case 0b111101010000:
+      return 76;//E
+      break;
+    case 0b111110010001:
+      return 77;//F
       break;
     case 0b111100010000:
-      return 77;
+      return 77;//F
+      break;
+    case 0b111110010000:
+      return 78;//F#
+      break;
+    case 0b111001010000:
+      return 78;//F#
       break;
     case 0b111000010000:
-      return 79;
+      return 79;//G
+      break;
+    case 0b111010010000:
+      return 80;//G#
+      break;
+    case 0b110001010000:
+      return 80;//G#
       break;
     case 0b110000010000:
-      return 81;
+      return 81;//A
+      break;
+    case 0b110010010000:
+      return 82;//A#
+      break;
+    case 0b100001010000:
+      return 82;//A#
       break;
     case 0b100000010000:
-      return 83;
+      return 83;//B
       break;
-
-    //次のオクターブ
-
+    case 0b010001010000:
+      return 83;//B
+      break;
+    case 0b100010010000:
+      return 84;//C
+      break;
     case 0b010000010000:
-    case 0b111100001111:
-      return 84;
+      return 84;//C
+      break;
+    case 0b010010010000:
+      return 85;//C#
+      break;
+    case 0b000001010000:
+      return 85;//C#
       break;
     case 0b000000010000:
-    case 0b111100000111:
-      return 86;
+      return 86;//D
       break;
-    case 0b111100000011:
-      return 88;
-      break;
-    case 0b111100000010:
-      return 89;
-      break;
-    case 0b111000000010:
-      return 91;
-      break;
-    case 0b110000000010:
-      return 93;
-      break;
-    case 0b100000000010:
-      return 95;
+    case 0b000010010000:
+      return 87;//D#
       break;
 
     //次のオクターブ
+    case 0b111001001111:
+      return 83;//B
+      break;
+    case 0b111100001111:
+      return 84;//C
+      break;
+    case 0b111110001111:
+      return 85;//C#
+      break;
+    case 0b111101001011:
+      return 85;//C#
+      break;
+    case 0b111100001011:
+      return 86;//D
+      break;
+    case 0b111110001011:
+      return 87;//D#
+      break;
+    case 0b111101001001:
+      return 87;//D#
+      break;
+    case 0b111100001001:
+      return 88;//E
+      break;
+    case 0b111101001000:
+      return 88;//E
+      break;
+    case 0b111110001001:
+      return 89;//F
+      break;
+    case 0b111100001000:
+      return 89;//F
+      break;
+    case 0b111110001000:
+      return 90;//F#
+      break;
+    case 0b111001001000:
+      return 90;//F#
+      break;
+    case 0b111000001000:
+      return 91;//G
+      break;
+    case 0b111010001000:
+      return 92;//G#
+      break;
+    case 0b110001001000:
+      return 92;//G#
+      break;
+    case 0b110000001000:
+      return 93;//A
+      break;
+    case 0b110010001000:
+      return 94;//A#
+      break;
+    case 0b100001001000:
+      return 94;//A#
+      break;
+    case 0b100000001000:
+      return 95;//B
+      break;
+    case 0b010001001000:
+      return 95;//B
+      break;
+    case 0b100010001000:
+      return 96;//C
+      break;
+    case 0b010000001000:
+      return 96;//C
+      break;
+    case 0b010010001000:
+      return 97;//C#
+      break;
+    case 0b000001001000:
+      return 97;//C#
+      break;
+    case 0b000000001000:
+      return 98;//D
+      break;
+    case 0b000010001000:
+      return 99;//D#
+      break;
 
-    case 0b010000000010:
-    case 0b111100001101:
-      return 96;
-      break;
-    case 0b000000000010:
-    case 0b111100000101:
-      return 98;
-      break;
-    case 0b111100000001:
-      return 100;
-      break;
-    case 0b111100000000:
-      return 101;
-      break;
-    case 0b111000000000:
-      return 103;
-      break;
-    case 0b110000000000:
-      return 105;
-      break;
-    case 0b100000000000:
-      return 107;
-      break;
-
-    case 0b010000000000:
-      return 108;
-      break;
     case 0b000000000000:
-      return 110;
-      break;
-    // 他の指遣いパターンを追加
-    default:
-      // 必要に応じてデフォルトの処理を追加
+      return -2;//エラーハンドリング
       break;
   }
 }

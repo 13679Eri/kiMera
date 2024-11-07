@@ -31,24 +31,24 @@ void trumpet() {
   }
 }
 
-int trunpet_patern(bool flag1, bool flag4, bool flag5) {
+int trunpet_patern(bool flag3, bool flag4, bool flag5) {
   ch = 3;
   int value = 0;
 
-  if (flag1) value |= 1 << 0;  // flag1 が true なら 0ビット目に1をセット
+  if (flag3) value |= 1 << 0;  // flag3 が true なら 0ビット目に1をセット
   if (flag5) value |= 1 << 1;  // flag5 が true なら 2ビット目に1をセット
   if (flag4) value |= 1 << 2;  // flag4 が true なら 1ビット目に1をセット
 
   // value の値に応じて数字を返す
   switch (value) {
     case 0b000: return 0;  // 押さえてない
-    case 0b001: return 1;  // flag1 だけが true
-    case 0b010: return 2;  // flag4 だけが true
-    case 0b100: return 3;  // flag5 だけが true
-    case 0b011: return 4;  // flag1 と flag4 が true
-    case 0b110: return 5;  // flag4 と flag5 が true
-    case 0b101: return 6;  // flag1 と flag5 が true
-    case 0b111: return 7;  // flag1, flag4, flag5 が全て true
+    case 0b001: return 1;  // flag3 だけが true
+    case 0b010: return 2;  // flag5 だけが true
+    case 0b100: return 3;  // flag4 だけが true
+    case 0b011: return 4;  // flag3 と flag5 が true
+    case 0b110: return 5;  // flag5 と flag4 が true
+    case 0b101: return 6;  // flag3 と flag4 が true
+    case 0b111: return 7;  // flag3, flag5, flag4 が全て true
     default: return -1;    // 上記以外の場合
   }
 }

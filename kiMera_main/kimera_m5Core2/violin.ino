@@ -4,6 +4,9 @@
 //手前の弦の方も情報を増やす
 
 void set_violin() {
+  set_sensor();
+  ch = 2;
+  synth.setInstrument(0, 2, note_color[1]);
   M5.Lcd.fillRect(30, 14, 150, 200, 0xff0d);
   M5.Lcd.fillCircle(110, 90, 30, 0xcb24);
   M5.Lcd.fillCircle(110, 135, 30, 0xcb24);
@@ -26,9 +29,15 @@ void violin() {
   //角度
   angle = atan2(accX, accZ) * 180.0 / PI;
 
+  //距離
+  tca.selectChannel(ULTRASONIC_CHANNEL);
+  previousDistan = distan;
+  distan = sensor.getDistance() / 10;
+
   //joystick
   tca.selectChannel(JOY_CHANNEL);
   Wire.requestFrom(JOY_ADDR, 3);  //Request 3 bytes from the slave device.  向从设备请求3个字节
+
   if (Wire.available()) {  //If data is received.  如果接收到数据
     x_data = Wire.read();
     y_data = Wire.read();
@@ -49,9 +58,6 @@ void violin() {
       mainbody_ag = receivedData.toFloat();
     }
     angle += mainbody_ag;
-    tca.selectChannel(ULTRASONIC_CHANNEL);
-    distan = sensor.getDistance() / 10;
-
     note = violin_Pitch(angle, distan);
     if (prev_note != note) {
       //      flag = 1;
@@ -67,9 +73,6 @@ void violin() {
       mainbody_ag = receivedData.toFloat();
     }
     angle += mainbody_ag;
-    tca.selectChannel(ULTRASONIC_CHANNEL);
-    distan = sensor.getDistance() / 10;
-//    delay(10);:
 
     note = violin_Pitch(angle, distan);
     if (prev_note != note) {
@@ -79,6 +82,33 @@ void violin() {
     }
   }
 
+  //  // 音の開始・停止の条件
+  //  if (120 <= x_data && x_data <= 130) {
+  //    note = -1;
+  //    synth.setAllNotesOff(2); // 止める
+  //    synth.setInstrument(0,ch, note_color[1]);
+  //    prev_note = note;
+  //  } else {
+  //    // 本体の角度を更新
+  //    Serial1.write(mode);
+  //    if (Serial1.available()) {
+  //      String receivedData = Serial1.readString();
+  //      mainbody_ag = receivedData.toFloat();
+  //    }
+  //    angle += mainbody_ag;
+  //
+  //    // 音程の更新条件
+  //    if (abs(distan - previousDistan) > 0.5 || x_data != prev_x_data) {  // 超音波の変化またはジョイスティックの変化をチェック
+  //      note = violin_Pitch(angle, distan);
+  //      if (prev_note != note) {
+  //        synth.setNoteOff(ch, prev_note, 0);
+  //        synth.setNoteOn(ch, note, 127);
+  //        prev_note = note;
+  //      }
+  //    }
+  //  }
+  //
+  //  prev_x_data = x_data;  // ジョイスティックの前回の値を保存
   //描画
   //  M5.Lcd.setCursor(35, 145);
   //  M5.Lcd.printf("ch=%d", ch);
@@ -89,53 +119,62 @@ void violin() {
   //  M5.Lcd.setCursor(35, 190);
   //  M5.Lcd.printf("joy=%d", x_data);
   //  M5.Lcd.setCursor(35, 215);
-  //  M5.Lcd.printf("mode=%d", mode);
+  //  M5.Lcd.printf("note=%d", note);
 }
 
 //指の位置測る
 int violin_Pitch(float angle, float newvalue) {
-  double dis[] = {28, 26.5, 24.5, 22.5, 20.5, 19.5, 18.5};
-  int size = sizeof(dis) / sizeof(dis[0]);
-
   if (35 <= angle && angle <= 45) { // G弦
     chord = false;
-    int notes[] = {55, 56, 57, 58, 59, 60, 61};
-    return determineNote(dis, notes, size, newvalue);
+    int notes[] = {55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72};
+    return determineNote(notes, newvalue);
   }
 
   if (15 <= angle && angle <= 25) { // D弦
     chord = false;
-    int notes[] = {62, 63, 64, 65, 66, 67, 68};
-    return determineNote(dis, notes, size, newvalue);
+    int notes[] = {62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79};
+    return determineNote(notes, newvalue);
   }
 
   if (-25 <= angle && angle <= -15) { // A弦
     chord = false;
-    int notes[] = {69, 70, 71, 72, 73, 74, 75};
-    return determineNote(dis, notes, size, newvalue);
+    int notes[] = {69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86};
+    return determineNote(notes, newvalue);
   }
 
   if (-45 <= angle && angle <= -35) { // E弦
     chord = false;
-    int notes[] = {76, 77, 78, 79, 80, 81, 82};
-    return determineNote(dis, notes, size, newvalue);
+    int notes[] = {76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93};
+    return determineNote(notes, newvalue);
   }
 
   return -2; // エラーハンドリング
 }
 
 
-int determineNote(double dis[], int notes[], int size, float newvalue) {
-  for (int i = 0; i < size; i++) {
-    if (i == 0) {
-      if (dis[i] <= newvalue) {
-        return notes[i];
-      }
-    } else {
-      if (dis[i] <= newvalue && newvalue <= dis[i - 1]) {
-        return notes[i];
-      }
+int determineNote(int notes[], float newvalue) {
+  for (int i = 0; i < 18; i++) { // 28から10までの範囲で値を取得するので18回ループ
+    float upper_bound = 28 - i;
+    float lower_bound = upper_bound - 1;
+
+    if (newvalue >= lower_bound && newvalue < upper_bound) {
+      return notes[i];
     }
   }
-  return notes[size - 1]; // デフォルトで最後の音符を返す
+  return -1; // 該当する範囲がなかった場合、エラー値として-1を返す
 }
+
+
+
+//  for (int i = 0; i < size; i++) {
+//    if (i == 0) {
+//      if (dis[i] <= newvalue) {
+//        return notes[i];
+//      }
+//    } else {
+//      if (dis[i] <= newvalue && newvalue <= dis[i - 1]) {
+//        return notes[i];
+//      }
+//    }
+//  }
+//  return notes[size - 1]; // デフォルトで最後の音符を返す
