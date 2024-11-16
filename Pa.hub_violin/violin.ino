@@ -71,8 +71,6 @@ void violin() {
 
   //描画
   M5.Lcd.setCursor(35, 145);
-  M5.Lcd.printf("ch=%d", ch);
-  M5.Lcd.setCursor(35, 160);
   M5.Lcd.printf("dis=%f", distan);
   M5.Lcd.setCursor(35, 175);
   M5.Lcd.printf("body_ag=%f", mainbody_ag);

@@ -5,7 +5,7 @@ void set_trumpet() {
   set_sensor();
   ch = 3;
   synth.setInstrument(0, ch, note_color[2]);
-  
+
   M5.Lcd.fillRect(30, 14, 150, 200, 0xff0d);
   M5.Lcd.fillTriangle(60, 75, 90, 90, 60, 105, YELLOW);
   M5.Lcd.fillRect(85, 88, 80, 4, YELLOW);
@@ -48,7 +48,8 @@ void trumpet() {
 
   if (volume >= 100 && 270 <= pitch && pitch <= 1100) {
     synth.setInstrument(0, 3, 57);
-    Serial1.write(mode);
+    ring = 1;
+    Serial1.write(ring);
     serial_receve(); //paternが送られてくる
     note = frequencyToMidiNoteNumber(pitch); //基準音決める
     note = convertNote(patern); //基準音とpaternから鳴る音を決める
@@ -59,20 +60,21 @@ void trumpet() {
     }
   } else {
     if (prev_note != -1) {
+      ring = 0;
       note = -1;
       synth.setNoteOn(3, note, 0);
       prev_note = note;
     }
   }
 
-  //  M5.Lcd.setCursor(35, 120);
-  //  M5.Lcd.printf("ch=%d", ch);
+  M5.Lcd.setCursor(35, 120);
+  M5.Lcd.printf("ch=%d", ch);
   //  M5.Lcd.setCursor(35, 135);
   //  M5.Lcd.printf("volume=%d", volume);
-  //  M5.Lcd.setCursor(35, 150);
-  //  M5.Lcd.printf("patern=%d", patern);
-  //  M5.Lcd.setCursor(35, 175);
-  //  M5.Lcd.printf("note=%d", note);
+  M5.Lcd.setCursor(35, 150);
+  M5.Lcd.printf("patern=%d", patern);
+  M5.Lcd.setCursor(35, 175);
+  M5.Lcd.printf("note=%d", note);
 }
 
 
@@ -155,13 +157,13 @@ int toVelocity(float vl) {
 int convertNote(int patern) {
   switch (patern) {
     case 0:  return note; // 押さえてない
-    case 1:  return note - 2; // flag1 だけが true
-    case 2:  return note - 1; // flag4 だけが true
-    case 3:  return note - 3; // flag5 だけが true
-    case 4:  return note - 3; // flag1 と flag4 が true
-    case 5:  return note - 4; // flag4 と flag5 が true
-    case 6:  return note - 5; // flag1 と flag5 が true
-    case 7:  return note - 6; // flag1, flag4, flag5 が全て true
+    case 1:  return note - 2; // flag3 だけが true
+    case 2:  return note - 1; // flag5 だけが true
+    case 3:  return note - 3; // flag4 だけが true
+    case 4:  return note - 3; // flag3 と flag5 が true
+    case 5:  return note - 4; // flag5 と flag4 が true
+    case 6:  return note - 5; // flag3 と flag4 が true
+    case 7:  return note - 6; // flag3, flag5, flag4 が全て true
     default: return -1;    // 上記以外の場合
   }
 }

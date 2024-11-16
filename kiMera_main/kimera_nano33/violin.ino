@@ -20,9 +20,8 @@ void violin() {
 
   //m5からringが来たら加速度送る
   if (Serial1.available()) {  // 受信データを確認する
-    if (mode == 2) {
+    if (ring == 1) {
       Serial1.print(angle);
-      //      Serial.print("  ring  ");
       Serial.println(angle);
     } else {
       mode = ring;
