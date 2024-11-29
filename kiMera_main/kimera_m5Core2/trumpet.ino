@@ -46,10 +46,10 @@ void trumpet() {
   fft_destroy(real_fft_plan);
   free(microRawData);
 
-  if (volume >= 100 && 270 <= pitch && pitch <= 1100) {
+  if (volume >= 150 && 270 <= pitch && pitch <= 1100) {
     synth.setInstrument(0, 3, 57);
     ring = 1;
-    Serial1.write(ring);
+    Serial1.write(mode);
     serial_receve(); //paternが送られてくる
     note = frequencyToMidiNoteNumber(pitch); //基準音決める
     note = convertNote(patern); //基準音とpaternから鳴る音を決める
@@ -62,7 +62,7 @@ void trumpet() {
     if (prev_note != -1) {
       ring = 0;
       note = -1;
-      synth.setNoteOn(3, note, 0);
+      synth.setNoteOff(3, note, 0);
       prev_note = note;
     }
   }

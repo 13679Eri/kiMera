@@ -23,10 +23,10 @@ void trumpet() {
   pt = trunpet_patern(touch_status_flag[1], touch_status_flag[4], touch_status_flag[5]);
 
   if (Serial1.available()) {      // 受信データを確認する
+    mode = (byte)Serial1.read();
+    Serial.println(mode);
     if (mode == 3) {
       data_send(ch, pt, 1, 127);
-    } else {
-      mode = ring;
     }
   }
 }

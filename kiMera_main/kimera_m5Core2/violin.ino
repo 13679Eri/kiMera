@@ -58,9 +58,9 @@ void violin() {
       mainbody_ag = receivedData.toFloat();
     }
     angle += mainbody_ag;
+    
     note = violin_Pitch(angle, distan);
     if (prev_note != note) {
-      //      flag = 1;
       synth.setNoteOff(ch, prev_note, 0);
       synth.setNoteOn(ch, note, 127);
       prev_note = note;
@@ -124,25 +124,25 @@ void violin() {
 
 //指の位置測る
 int violin_Pitch(float angle, float newvalue) {
-  if (35 <= angle && angle <= 45) { // G弦
+  if (30 <= angle && angle <= 50) { // G弦
     chord = false;
     int notes[] = {55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72};
     return determineNote(notes, newvalue);
   }
 
-  if (15 <= angle && angle <= 25) { // D弦
+  if (10 <= angle && angle <= 30) { // D弦
     chord = false;
     int notes[] = {62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79};
     return determineNote(notes, newvalue);
   }
 
-  if (-25 <= angle && angle <= -15) { // A弦
+  if (-30 <= angle && angle <= -10) { // A弦
     chord = false;
     int notes[] = {69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86};
     return determineNote(notes, newvalue);
   }
 
-  if (-45 <= angle && angle <= -35) { // E弦
+  if (-50 <= angle && angle <= -30) { // E弦
     chord = false;
     int notes[] = {76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93};
     return determineNote(notes, newvalue);
