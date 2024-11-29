@@ -1,28 +1,30 @@
-void set_sensor() {
-  //タッチセンサ
+#include "Seeed_MPR121_driver.h"
+
+Mpr121 mpr121;
+
+u16 touch_status_flag[CHANNEL_NUM] = { 0 };
+int note = 0;
+int pre_note = 0;
+
+void setup() {
   s32 ret = 0;
+  Serial.begin(115200);
   if (mpr121.begin() < 0) {
     Serial.println("Can't detect device!!!!");
   } else {
     Serial.println("mpr121 init OK!");
   }
-  mpr121.set_sensitivity(0x60);
 
-  //気圧
-  if (!lps35hw.begin_I2C()) {
-    Serial.println("Couldn't find LPS35HW chip");
-    while (1);
-  }
-  Serial.println("Found LPS35HW chip");
-  lps35hw.zeroPressure();
+  /*  set 0x00~0xFF to sensitivity,the value
+        The higher the value, the higher the sensitivity of 4/5/6/7 channel
+        When the sensor is connected to items such as crocodile clip,
+        the value needs to be adjusted
+    */
+  mpr121.set_sensitivity(0x60);
+  delay(100);
 }
 
-void flute() {
-  //気圧
-  unsigned long currentMillis = millis();  //今の時間
-  float pressure = lps35hw.readPressure();
-
-  //タッチ
+void loop() {
   u16 result = 0;
   u16 filtered_data_buf[CHANNEL_NUM] = { 0 };
   u8 baseline_buf[CHANNEL_NUM] = { 0 };
@@ -31,49 +33,37 @@ void flute() {
 
   mpr121.get_filtered_reg_data(&result, filtered_data_buf);
 
-  for (int i = 0; i < CHANNEL_NUM; i++) {
-    if (result & (1 << i)) { /*key i is pressed!!*/
-      if (0 == touch_status_flag[i]) {
-        touch_status_flag[i] = 1;
-      }
-    } else {
-      if (1 == touch_status_flag[i]) {
-        touch_status_flag[i] = 0;
-      }
-    }
-  }
 
-  //吹く
-  if (pressure > 0.50) {
-    note = flute_note();
-    if (prev_note != note) {
-      ring = 1;
-      velo = PreChangeToVolume(pressure);
-      if (velo > 127) {
-        velo = 127;
-      }
-      data_send(ch, prev_note, 0, 0);
-      data_send(ch, note, ring, velo);
-      prev_note = note;
+    for (int i = 0; i < CHANNEL_NUM; i++) {
+        if (result & (1 << i)) {                      /*key i is pressed!!*/
+            if (0 == touch_status_flag[i]) {
+                touch_status_flag[i] = 1;
+                Serial.print("key ");
+                Serial.print(i);
+                Serial.println("pressed");
+            }
+        } else {
+            if (1 == touch_status_flag[i]) {
+                touch_status_flag[i] = 0;
+                Serial.print("key ");
+                Serial.print(i);
+                Serial.println("release");
+            }
+        }
     }
-  } else {
-    if (prev_note != -1) {
-      note = -1;
-      ring = 0;
-      velo = 0;
-      data_send(ch, note, ring, velo);
-      prev_note = note;
-    }
-  }
-  delay(100);
-}
 
-int PreChangeToVolume(float preChange) {
-  // 圧力変化を音量にマップ（適宜調整）
-  return map(preChange, 0.5, 1.5, 63, 127);
+  note = flute_note();
+  if (note != pre_note) {
+    Serial.println(note);
+  }
+  pre_note = note;
+  delay(50);
 }
+// 11,10,9,8,0,1,2,
+// 3,4,5,
+// 6+,7-
 int flute_note() {
-  ch = 4;
+  // ch = 4;
   int value = 0;
 
   if (touch_status_flag[2]) value |= 1 << 0;   // flag3 が true なら 0ビット目に1をセット
@@ -178,5 +168,5 @@ int flute_note() {
     case 0b101000000000: return 99;  //D#
     default: return -1;
   }
-  // Serial.println(value);
+  Serial.println(value);
 }
