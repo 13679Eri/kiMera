@@ -1,1 +1,4 @@
-## kiMeraİ’è—pƒAƒvƒŠ
+## kiMera
+
+### log
+ios/Runner.xcodeproj/project.pbxproj ã® Bundle IDã‚’å¤‰æ›´ã€‚
