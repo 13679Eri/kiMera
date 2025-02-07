@@ -34,45 +34,16 @@ int previousMode = 0;
 void setup() {
   //シリアル
   Serial.begin(115200);
+  Serial.println("setup start");
   Serial1.begin(115200);  //mode受け取る midi送る
+  mode = 1;
+  
   set_sensor();
   set_violin();
   set_piano();
+  Serial.print("all OK");
 }
 
 void loop() {
-  rcv_serial();
-
-    // モードが変更された場合のみセット関数を呼び出す
-  if (mode != previousMode) {
-    if (mode == 1) {
-      set_piano();
-      //      Serial.println("piano");
-    } else if (mode == 2) {
-      set_violin();
-      //      Serial.println("violin");
-    } else if (mode == 3) {
-      set_sensor();
-      //      Serial.println("trumpet");
-    } else if (mode == 4) {
-      set_sensor();
-      //      Serial.println("flute");
-    }
-    previousMode = mode; // 前回のモードを更新
-  }
-  
-  switch (mode) {
-    case 1:
-      piano();
-      break;
-    case 2:
-      violin();
-      break;
-    case 3:
-      trumpet();
-      break;
-    case 4:
-      flute();
-      break;
-  }
+  set_mode();
 }

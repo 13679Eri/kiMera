@@ -19,6 +19,7 @@ void set_violin() {
 void violin() {
   M5.update();
   ch = 2;
+  serial_receve();
   synth.setInstrument(0, 2, note_color[1]);
 
   //IMU

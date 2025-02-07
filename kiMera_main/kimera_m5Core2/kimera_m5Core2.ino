@@ -8,9 +8,9 @@
 #include "IMU_6886.h"　　　//加速度
 
 ClosedCube::Wired::TCA9548A tca;
-const uint8_t JOY_CHANNEL = 0;       // ジョイスティックを接続するチャンネル
-const uint8_t ULTRASONIC_CHANNEL = 1; // 超音波センサを接続するチャンネル
-const uint8_t IMU_CHANNEL = 2;       // 加速度センサを接続するチャンネル
+const uint8_t JOY_CHANNEL = 1;       // ジョイスティックを接続するチャンネル
+const uint8_t ULTRASONIC_CHANNEL = 2; // 超音波センサを接続するチャンネル
+const uint8_t IMU_CHANNEL = 3;       // 加速度センサを接続するチャンネル
 
 IMU_6886 imu6886; //加速度
 SONIC_I2C sensor; //超音波
@@ -86,6 +86,9 @@ void setup() {
 
   //センサ 超音波 加速度 JOYSTICK PDM MIDI
   set_sensor();
+
+  //最初のモード変更
+  mode = 1;
 }
 
 void loop() {

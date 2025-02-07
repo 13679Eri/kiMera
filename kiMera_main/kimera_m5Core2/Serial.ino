@@ -21,10 +21,10 @@ void serial_receve() {
     // 分割数 = 分割処理(文字列, 区切り文字, 配列)
     int index = split(myString, ',', cmds);
 
-    ch = cmds[0].toInt();
-    note = cmds[1].toInt();
-    ring = cmds[2].toInt();
-    velo = cmds[3].toInt();
+    ch = cmds[0].toInt();   //第一引数
+    note = cmds[1].toInt(); //第二引数
+    ring = cmds[2].toInt(); //第三引数
+    velo = cmds[3].toInt(); //第四引数
 
     //いきなり全部チャンネル設定するとダメみたい
     //送られたchによって変えることにした
@@ -35,7 +35,9 @@ void serial_receve() {
     }
 
     if (ch == 3) {
-      patern = note; //0~5
+      patern = note; //第二引数 0~5
+    } else if (ch == 5) {
+      mode = note; //nanoの加速度によってmodeが変わるように
     } else {
       //鳴らす
       if (ring == 1) {

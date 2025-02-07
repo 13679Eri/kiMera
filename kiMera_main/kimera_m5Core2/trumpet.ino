@@ -67,14 +67,14 @@ void trumpet() {
     }
   }
 
-  M5.Lcd.setCursor(35, 120);
-  M5.Lcd.printf("ch=%d", ch);
-  //  M5.Lcd.setCursor(35, 135);
-  //  M5.Lcd.printf("volume=%d", volume);
-  M5.Lcd.setCursor(35, 150);
-  M5.Lcd.printf("patern=%d", patern);
-  M5.Lcd.setCursor(35, 175);
-  M5.Lcd.printf("note=%d", note);
+//  M5.Lcd.setCursor(35, 120);
+//  M5.Lcd.printf("ch=%d", ch);
+//  //  M5.Lcd.setCursor(35, 135);
+//  //  M5.Lcd.printf("volume=%d", volume);
+//  M5.Lcd.setCursor(35, 150);
+//  M5.Lcd.printf("patern=%d", patern);
+//  M5.Lcd.setCursor(35, 175);
+//  M5.Lcd.printf("note=%d", note);
 }
 
 

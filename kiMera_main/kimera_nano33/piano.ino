@@ -1,4 +1,4 @@
-void set_piano(){ 
+void set_piano() {
   //ピアノ
   pinMode(2, INPUT);
   pinMode(3, INPUT);
@@ -24,6 +24,7 @@ void set_piano(){
   digitalWrite(10, LOW);
   digitalWrite(11, LOW);
   digitalWrite(12, LOW);
+  Serial.println("piano ok");
 }
 
 void piano() {

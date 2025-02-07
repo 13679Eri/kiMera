@@ -78,8 +78,8 @@ void loop() {
             }
         }
     }
-    send_note();
-    Serial.println(note);
+//    send_note();
+//    Serial.println(note);
     delay(50);
 }
 
