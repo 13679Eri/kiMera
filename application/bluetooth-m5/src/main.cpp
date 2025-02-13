@@ -2,7 +2,7 @@
 #include "Led.hpp"
 
 constexpr int32_t VOLUME_THRESHOLD = 3000;
-kimera::Ble_Controller ble_controller{};
+cps::Ble_Controller ble_controller{};
 
 void setup_log() {
   M5.Log.setLogLevel(m5::log_target_serial, ESP_LOG_DEBUG);
@@ -16,34 +16,33 @@ void setup() {
 
   M5_LOGD("Waiting a client connection to notify...");
 
-  kimera::setup_fast_led();
-  ble_controller.setup();
+  cps::setup_fast_led();
 
-  kimera::led_red();
+  cps::led_red();
 }
 
 void loop() {
   M5.update();
 
   // notify changed value
-  if (kimera::deviceConnected) {
-    kimera::led_green();
+  if (cps::deviceConnected) {
+    cps::led_green();
     ble_controller.send();
   }
 
   // disconnecting
-  if (!kimera::deviceConnected && kimera::oldDeviceConnected) {
-    kimera::led_blue();
+  if (!cps::deviceConnected && cps::oldDeviceConnected) {
+    cps::led_blue();
     delay(500);  // give the bluetooth stack the chance to get things ready
-    kimera::pServer->startAdvertising();  // restart advertising
+    cps::pServer->startAdvertising();  // restart advertising
     M5_LOGD("start advertising");
-    kimera::oldDeviceConnected = kimera::deviceConnected;
+    cps::oldDeviceConnected = cps::deviceConnected;
   }
 
   // connecting
-  if (kimera::deviceConnected && !kimera::oldDeviceConnected) {
+  if (cps::deviceConnected && !cps::oldDeviceConnected) {
     // do stuff here on connecting
-    kimera::oldDeviceConnected = kimera::deviceConnected;
-    kimera::led_blue();
+    cps::oldDeviceConnected = cps::deviceConnected;
+    cps::led_blue();
   }
 }

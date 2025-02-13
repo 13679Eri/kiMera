@@ -3,10 +3,11 @@
 #include <BLEDevice.h>
 #include <BLEServer.h>
 #include <BLEUtils.h>
-
-#include <utility/Log_Class.hpp>
+#include <M5Unified.h>
 
 namespace cps {
+bool deviceConnected = false;
+bool oldDeviceConnected = false;
 
 class MyServerCallbacks : public BLEServerCallbacks {
   void onConnect(BLEServer* pServer) override { deviceConnected = true; }
@@ -18,7 +19,7 @@ class MyServerCallbacks : public BLEServerCallbacks {
     std::string value = pCharacteristic->getValue();
 
     if (value.length() > 0) {
-      M5_LOGD("*********");  // NOLINT
+      M5_LOGD("*********");
       M5_LOGD("New value: ");
       for (int i = 0; i < value.length(); i++) {
         M5_LOGD("%c", value[i]);
@@ -33,37 +34,35 @@ class MyServerCallbacks : public BLEServerCallbacks {
 class Ble_Controller {
   const std::string DeviceName;
   // the following for generating UUIDs: https://www.uuidgenerator.net/
-  const std::string Descriptor_Uuid;
+  const std::string DescUuid;
   const std::string ServUuid;
-  const std::string CHARACTERISTIC_UUID;
+  const std::string CharaUuid;
   BLEServer* pServer = nullptr;
   BLECharacteristic* pCharacteristic = nullptr;
-  bool deviceConnected = false;
-  bool oldDeviceConnected = false;
 
  public:
   Ble_Controller(std::string DeviceName, std::string DescUuid,
                  std::string ServUuid, std::string CharUuid)
-      : DEVICE_NAME(DeviceName),
-        DESCRIPTER_UUID(DescUuid),
-        SERVICE_UUID(ServUuid),
-        CHARACTERISTIC_UUID(CharUuid) {
+      : DeviceName(DeviceName),
+        DescUuid(DescUuid),
+        ServUuid(ServUuid),
+        CharaUuid(CharUuid) {
     // Create the BLE Device
-    BLEDevice::init(D);
+    BLEDevice::init(DeviceName);
 
     // Create the BLE Server
     pServer = BLEDevice::createServer();
     pServer->setCallbacks(new MyServerCallbacks());
 
     // Create the BLE Service
-    BLEService* pService = pServer->createService(SERVICE_UUID);
+    BLEService* pService = pServer->createService(ServUuid);
 
     // Create a BLE Characteristic
     pCharacteristic = pService->createCharacteristic(
-        CHARACTERISTIC_UUID, BLECharacteristic::PROPERTY_READ |
-                                 BLECharacteristic::PROPERTY_WRITE |
-                                 BLECharacteristic::PROPERTY_NOTIFY |
-                                 BLECharacteristic::PROPERTY_INDICATE);
+        CharaUuid, BLECharacteristic::PROPERTY_READ |
+                       BLECharacteristic::PROPERTY_WRITE |
+                       BLECharacteristic::PROPERTY_NOTIFY |
+                       BLECharacteristic::PROPERTY_INDICATE);
 
     // Creates BLE Descriptor 0x2902: Client Characteristic Configuration
     // Descriptor
@@ -75,7 +74,7 @@ class Ble_Controller {
 
     // Start advertising
     BLEAdvertising* pAdvertising = BLEDevice::getAdvertising();
-    pAdvertising->addServiceUUID(SERVICE_UUID);
+    pAdvertising->addServiceUUID(ServUuid);
     pAdvertising->setScanResponse(false);
     pAdvertising->setMinPreferred(
         0x0);  // set value to 0x00 to not advertise this parameter

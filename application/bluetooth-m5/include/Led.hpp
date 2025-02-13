@@ -1,6 +1,6 @@
 #include <FastLED.h>
 
-namespace kimera {
+namespace cps {
 // グローバル変数（プログラム全体で使用する変数の定義をします。）
 constexpr int PIN_LED = 21;  // 本体フルカラーLEDの使用端子（G21）
 constexpr int NUM_LEDS = 1;  // 本体フルカラーLEDの数
@@ -33,4 +33,4 @@ void led_white() {
   led = CRGB::White;
   FastLED.show();
 }
-}  // namespace kimera
+}  // namespace cps
