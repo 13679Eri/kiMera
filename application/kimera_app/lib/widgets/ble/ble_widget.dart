@@ -6,9 +6,8 @@ import '../../notifiers/ble_notifier.dart';
 import 'idle_view.dart';
 import 'scanning_view.dart';
 import 'connecting_view.dart';
-import 'discovering_services_view.dart';
-import 'subscribed_view.dart';
-import 'ble_error_view.dart';
+import '../kimera_home.dart';
+import 'error_view.dart';
 
 class BleWidget extends ConsumerWidget {
   const BleWidget({super.key});
@@ -19,19 +18,16 @@ class BleWidget extends ConsumerWidget {
     final bleNotifier = ref.read(bleNotifierProvider.notifier);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Kimera App'),
-      ),
+      appBar: AppBar(),
       body: switch (bleState) {
         Idle() => IdleView(onStartScan: bleNotifier.startScan),
         Scanning() => const ScanningView(),
         Connecting(deviceName: final deviceName) =>
           ConnectingView(deviceName: deviceName),
-        DiscoveringServices() => const DiscoveringServicesView(),
-        Subscribed(receivedData: final data, receivedCount: final count) =>
-          SubscribedView(receivedData: data, receivedCount: count),
+        Connected(deviceName: final deviceName) =>
+          KimeraHome(deviceName: deviceName),
         BleError(message: final message) =>
-          BleErrorView(message: message, onRetry: bleNotifier.startScan),
+          ErrorView(message: message, onRetry: bleNotifier.startScan),
       },
     );
   }

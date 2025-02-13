@@ -16,14 +16,9 @@ class Connecting extends BleAppState {
   const Connecting({required this.deviceName});
 }
 
-class DiscoveringServices extends BleAppState {
-  const DiscoveringServices();
-}
-
-class Subscribed extends BleAppState {
-  final List<String> receivedData;
-  final int receivedCount;
-  const Subscribed({required this.receivedData, required this.receivedCount});
+class Connected extends BleAppState {
+  final String deviceName;
+  const Connected({required this.deviceName});
 }
 
 class BleError extends BleAppState {

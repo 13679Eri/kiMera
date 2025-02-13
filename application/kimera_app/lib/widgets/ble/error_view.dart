@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class BleErrorView extends StatelessWidget {
+class ErrorView extends StatelessWidget {
   final String message;
   final VoidCallback onRetry;
 
-  const BleErrorView({
+  const ErrorView({
     super.key,
     required this.message,
     required this.onRetry,
@@ -16,11 +16,11 @@ class BleErrorView extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text('Error: $message'),
+          Text('エラー: $message'),
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: onRetry,
-            child: const Text('Retry'),
+            child: const Text('リトライ'),
           ),
         ],
       ),

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../models/ble_state.dart';
@@ -13,7 +12,7 @@ part 'ble_notifier.g.dart';
 @riverpod
 class BleNotifier extends _$BleNotifier {
   // 定数の設定
-  static const String _targetDeviceName = 'kitahatsu';
+  static const String _deviceNamePattern = 'kiMera';
   static final Uuid _serviceUuid =
       Uuid.parse('c39e46c6-88d8-48d2-9310-278848445900');
   static final Uuid _characteristicUuid =
@@ -21,7 +20,6 @@ class BleNotifier extends _$BleNotifier {
 
   static const Duration _connectionDelay = Duration(seconds: 1);
   static const Duration _retryDelay = Duration(seconds: 1);
-  static const Duration _receiveCooldown = Duration(seconds: 1);
   static const Duration _connectionTimeout = Duration(seconds: 5);
 
   // BLE 操作用のインスタンス
@@ -36,8 +34,8 @@ class BleNotifier extends _$BleNotifier {
   int _retryCount = 0;
   final int _maxRetry = 3;
 
-  // 連続受信防止用フラグ
-  bool _canReceive = true;
+  // 接続済みのデバイス情報を保持
+  DiscoveredDevice? _connectedDevice;
 
   @override
   BleAppState build() {
@@ -54,13 +52,12 @@ class BleNotifier extends _$BleNotifier {
   void startScan() {
     _stopScan();
     _retryCount = 0;
-    _canReceive = true;
     state = const Scanning();
 
     _scanSubscription = _ble
         .scanForDevices(withServices: [], scanMode: ScanMode.lowLatency).listen(
       (device) {
-        if (device.name == _targetDeviceName) {
+        if (device.name.contains(_deviceNamePattern)) {
           _stopScan();
           _connect(device);
         }
@@ -90,7 +87,7 @@ class BleNotifier extends _$BleNotifier {
         final connState = connectionState.connectionState;
         if (connState == DeviceConnectionState.connected) {
           await Future.delayed(_connectionDelay);
-          _discoverServicesAndSubscribe(device);
+          state = Connected(deviceName: device.name);
         } else if (connState == DeviceConnectionState.disconnected) {
           _attemptRetry(() => _connect(device));
         }
@@ -102,51 +99,6 @@ class BleNotifier extends _$BleNotifier {
     );
   }
 
-  /// サービス発見と通知購読
-  Future<void> _discoverServicesAndSubscribe(DiscoveredDevice device) async {
-    try {
-      state = const DiscoveringServices();
-      final services = await _ble.getDiscoveredServices(device.id);
-      debugPrint('Discovered services: $services');
-
-      // 初期の Subscribed 状態（受信データは空）
-      state = const Subscribed(receivedData: [], receivedCount: 0);
-
-      final characteristic = QualifiedCharacteristic(
-        serviceId: _serviceUuid,
-        characteristicId: _characteristicUuid,
-        deviceId: device.id,
-      );
-
-      _notifySubscription =
-          _ble.subscribeToCharacteristic(characteristic).listen(
-        (data) {
-          if (!_canReceive) return;
-          if (state is Subscribed) {
-            final current = state as Subscribed;
-            final newCount = current.receivedCount + 1;
-            final dataStr = utf8.decode(data);
-            final newData = List<String>.from(current.receivedData)
-              ..add('[$newCount] $dataStr');
-            state = Subscribed(receivedData: newData, receivedCount: newCount);
-          }
-          HapticFeedback.vibrate();
-          _canReceive = false;
-          Future.delayed(_receiveCooldown, () {
-            _canReceive = true;
-          });
-        },
-        onError: (error) {
-          state = BleError(message: 'Notify error: $error');
-          _attemptRetry(() => _discoverServicesAndSubscribe(device));
-        },
-      );
-    } catch (e) {
-      state = BleError(message: 'Discover/Subscribe error: $e');
-      _attemptRetry(() => _discoverServicesAndSubscribe(device));
-    }
-  }
-
   /// リトライ処理（最大 _maxRetry 回まで）
   void _attemptRetry(VoidCallback action) {
     if (_retryCount < _maxRetry) {
@@ -154,6 +106,79 @@ class BleNotifier extends _$BleNotifier {
       Future.delayed(_retryDelay, action);
     } else {
       state = const BleError(message: 'Max retry reached. Give up.');
+    }
+  }
+
+  /// サービス発見と通知購読
+  Future<void> subscribe() async {
+    try {
+      final characteristic = QualifiedCharacteristic(
+        serviceId: _serviceUuid,
+        characteristicId: _characteristicUuid,
+        deviceId: _connectedDevice!.id,
+      );
+
+      _notifySubscription =
+          _ble.subscribeToCharacteristic(characteristic).listen(
+        (data) {
+          final dataStr = utf8.decode(data);
+        },
+        onError: (error) {
+          state = BleError(message: 'Notify error: $error');
+        },
+      );
+    } catch (e) {
+      state = BleError(message: 'Discover/Subscribe error: $e');
+    }
+  }
+
+  /// 通知購読を解除する（「Unsubscribe」など任意のボタンで）
+  Future<void> unsubscribe() async {
+    await _notifySubscription?.cancel();
+    _notifySubscription = null;
+    if (_connectedDevice != null) {
+      state = Connected(deviceName: _connectedDevice!.name);
+    }
+  }
+
+  /// characteristic の値を読み出す（「Read」ボタン用）
+  Future<void> readCharacteristic() async {
+    if (_connectedDevice == null) {
+      state = const BleError(message: 'No connected device.');
+      return;
+    }
+    try {
+      final characteristic = QualifiedCharacteristic(
+        serviceId: _serviceUuid,
+        characteristicId: _characteristicUuid,
+        deviceId: _connectedDevice!.id,
+      );
+      final data = await _ble.readCharacteristic(characteristic);
+      debugPrint('Read data: ${utf8.decode(data)}');
+      // 必要に応じて state を更新したり、UI に反映する
+    } catch (e) {
+      state = BleError(message: 'Read error: $e');
+    }
+  }
+
+  /// characteristic に値を書き込む（「Write」ボタン用）
+  Future<void> writeCharacteristic(String value) async {
+    if (_connectedDevice == null) {
+      state = const BleError(message: 'No connected device.');
+      return;
+    }
+    try {
+      final characteristic = QualifiedCharacteristic(
+        serviceId: _serviceUuid,
+        characteristicId: _characteristicUuid,
+        deviceId: _connectedDevice!.id,
+      );
+      final data = utf8.encode(value);
+      await _ble.writeCharacteristicWithResponse(characteristic, value: data);
+      debugPrint('Write successful: $value');
+      // 書き込み成功時の処理を追加可能
+    } catch (e) {
+      state = BleError(message: 'Write error: $e');
     }
   }
 }

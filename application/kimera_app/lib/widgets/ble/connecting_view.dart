@@ -11,7 +11,7 @@ class ConnectingView extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text('Connecting to $deviceName...'),
+          Text('$deviceName に接続中...'),
           const SizedBox(height: 16),
           const CircularProgressIndicator(),
         ],

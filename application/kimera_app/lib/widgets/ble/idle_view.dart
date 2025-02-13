@@ -11,11 +11,11 @@ class IdleView extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text('Idle state.'),
+          const Text('kiMera未接続'),
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: onStartScan,
-            child: const Text('Start Scan'),
+            child: const Text('スキャン開始'),
           ),
         ],
       ),

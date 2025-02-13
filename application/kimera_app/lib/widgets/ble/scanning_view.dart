@@ -9,7 +9,7 @@ class ScanningView extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: const [
-          Text('Scanning...'),
+          Text('スキャン中...'),
           SizedBox(height: 16),
           CircularProgressIndicator(),
         ],
