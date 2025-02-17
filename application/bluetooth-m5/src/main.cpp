@@ -1,13 +1,18 @@
 #include "Ble.hpp"
 #include "Led.hpp"
 
-constexpr int32_t VOLUME_THRESHOLD = 3000;
-cps::Ble_Controller ble_controller{};
+const char* DEVICE_NAME = "kiMera";
+const char* SERVICE_UUID = "4fafc201-1fb5-459e-8fcc-c5c9c331914b";
+const char* CHARACTERISTIC_UUID = "beb5483e-36e1-4688-b7f5-ea07361b26a8";
 
 void setup_log() {
   M5.Log.setLogLevel(m5::log_target_serial, ESP_LOG_DEBUG);
   M5.Log.setEnableColor(m5::log_target_serial, true);
 }
+
+cps::ble::Controller ble{DEVICE_NAME, SERVICE_UUID, CHARACTERISTIC_UUID};
+
+cps::led::Controller led{};
 
 void setup() {
   auto cfg = M5.config();  // M5Stack初期設定用の構造体を代入
@@ -16,33 +21,14 @@ void setup() {
 
   M5_LOGD("Waiting a client connection to notify...");
 
-  cps::setup_fast_led();
-
-  cps::led_red();
+  led.red();
 }
 
 void loop() {
   M5.update();
 
   // notify changed value
-  if (cps::deviceConnected) {
-    cps::led_green();
-    ble_controller.send();
-  }
-
-  // disconnecting
-  if (!cps::deviceConnected && cps::oldDeviceConnected) {
-    cps::led_blue();
-    delay(500);  // give the bluetooth stack the chance to get things ready
-    cps::pServer->startAdvertising();  // restart advertising
-    M5_LOGD("start advertising");
-    cps::oldDeviceConnected = cps::deviceConnected;
-  }
-
-  // connecting
-  if (cps::deviceConnected && !cps::oldDeviceConnected) {
-    // do stuff here on connecting
-    cps::oldDeviceConnected = cps::deviceConnected;
-    cps::led_blue();
+  if (ble.isDeviceConnected()) {
+    led.green();
   }
 }
