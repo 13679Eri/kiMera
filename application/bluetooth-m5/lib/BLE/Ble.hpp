@@ -1,13 +1,9 @@
 #pragma once
+#include <Arduino.h>
 #include <BLE2902.h>
 #include <BLEDevice.h>
 #include <BLEServer.h>
 #include <BLEUtils.h>
-#include <M5Unified.h>
-
-#include <functional>
-#include <memory>
-#include <string>
 
 namespace cps {
 namespace ble {
@@ -35,10 +31,10 @@ class MyWriteCallbacks : public BLECharacteristicCallbacks {
 
 class Controller {
  private:
-  const std::string device_name_;
-  const std::string desc_uuid_;
-  const std::string serv_uuid_;
-  const std::string chara_uuid_;
+  const char* device_name_;
+  const char* desc_uuid_;
+  const char* serv_uuid_;
+  const char* chara_uuid_;
   BLEServer* server_;
   BLECharacteristic* characteristic_;
 
@@ -51,14 +47,20 @@ class Controller {
   MyWriteCallbacks myWriteCallbacks_;
 
  public:
-  Controller(std::string device_name, std::string serv_uuid,
-             std::string chara_uuid);
-  void send(const std::string& message);
+  Controller(const char* device_name, const char* serv_uuid,
+             const char* chara_uuid,
+             void (*on_message_received)(const String&));
+
+  void setup_after_begin();
+
+  void send(const String& message);
 
   void setDeviceConnected(bool connected);
 
   // 接続状態を取得するためのゲッター
   bool isDeviceConnected() const;
+
+  void (*on_message_received_)(const String&);
 };
 
 }  // namespace ble

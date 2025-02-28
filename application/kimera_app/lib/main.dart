@@ -1,7 +1,7 @@
 // main.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kimera_app/widgets/ble/ble_widget.dart'; // ble_widget.dart をインポート
+import 'package:kimera_app/widgets/pairing/pairing.dart';
 
 // Riverpod の ProviderScope でラップ
 void main() => runApp(const ProviderScope(child: KimeraApp()));
@@ -17,7 +17,7 @@ class KimeraApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const BleWidget(),
+      home: const Kimera(),
     );
   }
 }

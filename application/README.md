@@ -16,10 +16,16 @@ Flutter製のアプリケーション`kimera_app`と、アプリと連携する�
 
 ### 進捗 TODO
 - [ ] (少しズレるが) kiMera_mainの整理
-- [ ] bluetooth-m5をライブラリとしてまとめる cppとhppの分離
+- [x] bluetooth-m5をライブラリとしてまとめる cppとhppの分離
+- [ ] コードを見やすくする
+  - [ ] ifをassertにする
 - [ ] アプリ、まずは楽器切り替え機能
   - [ ] 適当なjsonを送ってみて、bluetooth-m5で受け取れるかどうか
 
+### 把握しているバグ
+- [ ] リトライ後に再接続するとフリーズする
+- [x] subscribeできない
+  - [x] connect時にconnectedDeviceにオブジェクトを入れていない
 
 
 
