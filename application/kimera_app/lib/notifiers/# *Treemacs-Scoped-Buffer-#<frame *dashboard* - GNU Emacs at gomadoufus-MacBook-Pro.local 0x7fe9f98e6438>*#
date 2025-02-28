@@ -1,0 +1,42 @@
+	kimera_app
+  		.dart_tool
+  		.idea
+  		android
+  		build
+  		ios
+  		lib
+    		build/ios/XCBuildData/PIFCache
+    		models
+       		kimera_state.dart
+       		pairing_state.dart
+    		notifiers
+       		kimera_notifier.dart
+       		pairing_notifier.dart
+    		widgets
+      		pairing
+         		connecting_view.dart
+         		error_view.dart
+         		idle_view.dart
+         		pairing.dart
+         		scanning_view.dart
+       		flute.dart
+       		home.dart
+       		kimera.dart
+       		piano.dart
+       		trumpet.dart
+       		violin.dart
+     		main.dart
+  		linux
+  		macos
+  		web
+  		windows
+   .flutter-plugins
+   .flutter-plugins-dependencies
+   		.gitignore
+   .metadata
+   .projectile
+   		README.md
+   		analysis_options.yaml
+   kimera_app.iml
+   pubspec.lock
+   		pubspec.yaml

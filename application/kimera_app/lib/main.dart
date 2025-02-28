@@ -1,13 +1,13 @@
 // main.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kimera_app/widgets/pairing/pairing.dart';
+import 'widgets/kimera.dart';
 
 // Riverpod の ProviderScope でラップ
-void main() => runApp(const ProviderScope(child: KimeraApp()));
+void main() => runApp(const ProviderScope(child: App()));
 
-class KimeraApp extends StatelessWidget {
-  const KimeraApp({super.key});
+class App extends StatelessWidget {
+  const App({super.key});
 
   @override
   Widget build(BuildContext context) {
