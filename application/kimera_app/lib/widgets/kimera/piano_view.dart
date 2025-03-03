@@ -14,6 +14,27 @@ class PianoViewState extends ConsumerState<PianoView> {
   int transpose = 0;
 
   @override
+  void initState() {
+    super.initState();
+    //TODO: json_serializableを使って、jsonを作成する
+    ref
+        .read(pairingNotifierProvider.notifier)
+        .writeCharacteristic("{\"mode\": \"piano\"}");
+  }
+
+  void _incrementTranspose() {
+    setState(() {
+      transpose++;
+    });
+  }
+
+  void _decrementTranspose() {
+    setState(() {
+      transpose--;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Center(
       child: Column(
@@ -26,25 +47,12 @@ class PianoViewState extends ConsumerState<PianoView> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton(
-                onPressed: () {
-                  transpose = transpose + 1;
-                  ref
-                      .read(pairingNotifierProvider.notifier)
-                      .writeCharacteristic("hello");
-                },
+                onPressed: _incrementTranspose,
                 child: const Text('+1'),
               ),
               const SizedBox(width: 16),
               ElevatedButton(
-                onPressed: () async {
-                  transpose = transpose - 1;
-                  String? text = await ref
-                      .read(pairingNotifierProvider.notifier)
-                      .readCharacteristic();
-                  if (text != null) {
-                    transpose = 100;
-                  }
-                },
+                onPressed: _decrementTranspose,
                 child: const Text('-1'),
               ),
               ElevatedButton(
