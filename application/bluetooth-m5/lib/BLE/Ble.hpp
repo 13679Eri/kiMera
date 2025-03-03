@@ -43,13 +43,12 @@ class Controller {
   bool oldDeviceConnected_;
 
   // コールバッククラスのインスタンスをメンバとして持つ
-  MyServerCallbacks myCallbacks_;
+  MyServerCallbacks myServerCallbacks_;
   MyWriteCallbacks myWriteCallbacks_;
 
  public:
   Controller(const char* device_name, const char* serv_uuid,
-             const char* chara_uuid,
-             void (*on_message_received)(const String&));
+             const char* chara_uuid, void (*on_message_received)(String));
 
   void setup_after_begin();
 
@@ -60,7 +59,7 @@ class Controller {
   // 接続状態を取得するためのゲッター
   bool isDeviceConnected() const;
 
-  void (*on_message_received_)(const String&);
+  void (*on_message_received_)(String);
 };
 
 }  // namespace ble
