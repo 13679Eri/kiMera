@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-
-import 'package:kimera_app/widgets/kimera/modeselect_view.dart';
+import 'package:go_router/go_router.dart';
 
 class ConnectedView extends StatefulWidget {
   const ConnectedView({super.key});
@@ -33,11 +32,14 @@ class ConnectedViewState extends State<ConnectedView> {
     timer = Timer(
       const Duration(seconds: 2),
       () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const ModeSelectView()),
-        );
+        GoRouter.of(context).go('/idle/mode_select');
       },
     );
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
   }
 }

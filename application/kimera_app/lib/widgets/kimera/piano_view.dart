@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 
 class PianoView extends StatefulWidget {
-  int transpose = 0;
-  PianoView({super.key});
+  const PianoView({super.key});
 
+  @override
+  State<PianoView> createState() => PianoViewState();
+}
+
+class PianoViewState extends State<PianoView> {
+  int transpose = 0;
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -29,6 +34,11 @@ class PianoView extends StatefulWidget {
                 },
                 child: const Text('-1'),
               ),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('戻る')),
             ],
           ),
         ],

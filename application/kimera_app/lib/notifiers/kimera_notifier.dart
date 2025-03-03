@@ -11,22 +11,6 @@ class KimeraNotifier extends _$KimeraNotifier {
   }
 
   void connected() {
-    state = const Home();
-  }
-
-  void goToFlute() {
-    state = const Flute();
-  }
-
-  void goToPiano() {
-    state = Piano();
-  }
-
-  void goToTrumpet() {
-    state = const Trumpet();
-  }
-
-  void goToViolin() {
-    state = const Violin();
+    state = const ModeSelect();
   }
 }

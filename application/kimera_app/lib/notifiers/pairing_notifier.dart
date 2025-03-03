@@ -95,7 +95,7 @@ class PairingNotifier extends _$PairingNotifier {
             characteristicId: _characteristicUuid,
             deviceId: _connectedDevice!.id,
           );
-          state = Connected(deviceName: device.name);
+          state = Connected();
         } else if (connState == DeviceConnectionState.disconnected) {
           _attemptRetry(() => _connect(device));
         }
