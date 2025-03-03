@@ -1,0 +1,47 @@
+＊はArduino(PlatformIO)内で検索出てくる
+
+M5のライブラリ
+
+＊#include <M5Core2.h>
+M5Core2のライブラリ
+
+#include "ClosedCube_TCA9548A.h"
+M5Core2のライブラリの中にある
+
+＊#include <Unit_Sonic.h>　　//超音波
+M5Unit-Sonic：https://github.com/m5stack/M5Unit-Sonic
+
+#include "IMU_6886.h"　　　//加速度
+M5のスケッチ例の中にIMUのお試しのコードがある(スケッチ例の集まりだからzipでそのまま入らない)：https://github.com/m5stack/M5-ProductExampleCodes/tree/master/Unit/IMU_Unit
+IMU.cppの〈M5Stack.h〉M5Core2に変更する
+IMUプロじゃない注意
+
+#include <driver/i2s.h>
+M5Stac(arduino)の内部のドライバのやつ？かな。特にダウンロードしなくて平気なはず
+https://lang-ship.com/reference/unofficial/M5StickC/Functions/driver/i2s/
+
+#include "fft.h"
+IMUのとこと同じライブラリ
+https://github.com/m5stack/M5-ProductExampleCodes/tree/master/Unit/PDM
+
+#include <math.h>
+fftの解析のために使ってる、arduinoのライブラリ(Cの標準ライブラリ)
+
+＊#include "M5UnitSynth.h"
+UnitSynthのライブラリ：https://github.com/m5stack/M5Unit-Synth/tree/main
+
+
+
+Nanoのライブラリ
+#include "Seeed_MPR121_driver.h"
+タッチセンサのライブラリ
+https://github.com/Seeed-Studio/Seeed_MRP121/tree/master
+AdafruitのMPR121のライブラリもあるけどこっち使ってる
+
+＊#include <Adafruit_LPS35HW.h>
+気圧センサのライブラリ
+https://github.com/adafruit/Adafruit_LPS35HW/tree/master
+
+＊#include <Arduino_LSM6DS3.h>
+Nano33IoTの内部加速度センサのライブラリ
+https://github.com/arduino-libraries/Arduino_LSM6DS3/tree/master
