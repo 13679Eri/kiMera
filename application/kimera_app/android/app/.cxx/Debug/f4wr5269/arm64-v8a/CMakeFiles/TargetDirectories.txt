@@ -1,0 +1,2 @@
+C:/Users/erina/Documents/Arduino/kiMera/application/kimera_app/android/app/.cxx/Debug/f4wr5269/arm64-v8a/CMakeFiles/edit_cache.dir
+C:/Users/erina/Documents/Arduino/kiMera/application/kimera_app/android/app/.cxx/Debug/f4wr5269/arm64-v8a/CMakeFiles/rebuild_cache.dir

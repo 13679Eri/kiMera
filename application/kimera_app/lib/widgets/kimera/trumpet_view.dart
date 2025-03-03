@@ -5,14 +5,17 @@ class TrumpetView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return Material(
+      child:Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text('Violin画面'),
+          Image.asset('assets/trumpet.png'),
+          Text('Trumpet画面'),
           const SizedBox(height: 16),
           const CircularProgressIndicator(),
         ],
+      ),
       ),
     );
   }

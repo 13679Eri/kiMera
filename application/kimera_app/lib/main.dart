@@ -7,6 +7,11 @@ import 'package:kimera_app/widgets/kimera.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kimera_app/widgets/kimera/mode_select_consumer.dart';
 
+import 'package:kimera_app/widgets/kimera/piano_view.dart';
+import 'package:kimera_app/widgets/kimera/violin_view.dart';
+import 'package:kimera_app/widgets/kimera/trumpet_view.dart';
+import 'package:kimera_app/widgets/kimera/flute_view.dart';
+
 // Riverpod の ProviderScope でラップ
 //void main() => runApp(const ProviderScope(child: App()));
 void main() => runApp(ProviderScope(
@@ -18,7 +23,7 @@ final _router = GoRouter(
   routes: [
     GoRoute(
       path: '/',
-      builder: (context, state) => const Kimera(),
+      builder: (context, state) => const FluteView(),
       routes: [
         GoRoute(
           path: '/idle',
