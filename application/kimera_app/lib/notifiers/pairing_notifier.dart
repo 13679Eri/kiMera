@@ -9,7 +9,7 @@ import '../models/pairing_state.dart';
 
 part 'pairing_notifier.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class PairingNotifier extends _$PairingNotifier {
   // 定数の設定
   static const String _deviceNamePattern = 'kiMera';
@@ -43,6 +43,7 @@ class PairingNotifier extends _$PairingNotifier {
   PairingState build() {
     // Notifier が破棄されるときのクリーンアップ
     ref.onDispose(() {
+      debugPrint("PairingNotifier disposed");
       _scanSubscription?.cancel();
       _connectionSubscription?.cancel();
       _notifySubscription?.cancel();
@@ -52,7 +53,7 @@ class PairingNotifier extends _$PairingNotifier {
 
   /// スキャン開始
   void startScan() {
-    _stopScan();
+    debugPrint("startScan");
     _retryCount = 0;
     state = const Scanning();
 
@@ -72,12 +73,14 @@ class PairingNotifier extends _$PairingNotifier {
 
   /// スキャン停止
   void _stopScan() {
+    debugPrint("stopScan");
     _scanSubscription?.cancel();
     _scanSubscription = null;
   }
 
   /// 指定されたデバイスに接続
   void _connect(DiscoveredDevice device) {
+    debugPrint("connect: ${device.name}");
     state = Connecting(deviceName: device.name);
     _connectionSubscription = _ble
         .connectToDevice(
@@ -109,6 +112,7 @@ class PairingNotifier extends _$PairingNotifier {
 
   /// リトライ処理（最大 _maxRetry 回まで）
   void _attemptRetry(VoidCallback action) {
+    debugPrint("attemptRetry: $_retryCount");
     if (_retryCount < _maxRetry) {
       _retryCount++;
       Future.delayed(_retryDelay, action);
@@ -122,6 +126,7 @@ class PairingNotifier extends _$PairingNotifier {
     assert(_connectedDevice != null);
     try {
       final data = await _ble.readCharacteristic(_characteristic!);
+      debugPrint('Read data: $data');
       return utf8.decode(data);
     } catch (e) {
       return null;
@@ -131,9 +136,13 @@ class PairingNotifier extends _$PairingNotifier {
   /// characteristic に値を書き込む（「Write」ボタン用）
   Future<void> writeCharacteristic(String value) async {
     assert(_connectedDevice != null);
-    final data = utf8.encode(value);
-    await _ble.writeCharacteristicWithoutResponse(_characteristic!,
-        value: data);
+    try {
+      final data = utf8.encode(value);
+      await _ble.writeCharacteristicWithResponse(_characteristic!, value: data);
+      debugPrint('Write data: $data');
+    } catch (e) {
+      debugPrint('Write error: $e');
+    }
   }
 
   /// 通知購読
@@ -162,5 +171,22 @@ class PairingNotifier extends _$PairingNotifier {
     await _notifySubscription?.cancel();
     _notifySubscription = null;
     state = Connected();
+  }
+
+  /// 切断
+  void disconnect() {
+    debugPrint("disconnect");
+    // 繋がっているか分からないけど一応呼んでおく、という利用も考えて
+    if (_connectedDevice == null) {
+      debugPrint("No device connected");
+      return;
+    }
+
+    _scanSubscription?.cancel();
+    _notifySubscription?.cancel();
+    _connectionSubscription?.cancel();
+    _connectedDevice = null;
+    _characteristic = null;
+    state = const Idle();
   }
 }

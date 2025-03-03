@@ -24,11 +24,8 @@ MyWriteCallbacks::MyWriteCallbacks(Controller* controller)
 
 void MyWriteCallbacks::onWrite(BLECharacteristic* characteristic) {
   String value = characteristic->getValue().c_str();
-  if (value.length() != 0) {
-    if (controller_) {
-      controller_->on_message_received_(value);
-    }
-  }
+  controller_->send("Received: " + value);
+  controller_->on_message_received_(value);
 }
 
 // Controller の実装
@@ -43,7 +40,7 @@ Controller::Controller(const char* device_name, const char* serv_uuid,
       deviceConnected_(false),
       myCallbacks_(this),  // コールバックに自身のポインタを渡す
       myWriteCallbacks_(this),
-      on_message_received_(on_message_received){};
+      on_message_received_(on_message_received) {};
 
 void Controller::setup_after_begin() {
   // BLEデバイスの初期化

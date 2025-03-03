@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kimera_app/notifiers/kimera_notifier.dart';
 
-class ConnectedView extends StatefulWidget {
+class ConnectedView extends ConsumerStatefulWidget {
   const ConnectedView({super.key});
 
   @override
-  State<ConnectedView> createState() => ConnectedViewState();
+  ConnectedViewState createState() => ConnectedViewState();
 }
 
-class ConnectedViewState extends State<ConnectedView> {
+class ConnectedViewState extends ConsumerState<ConnectedView> {
   Timer? timer;
 
   @override
@@ -32,7 +34,7 @@ class ConnectedViewState extends State<ConnectedView> {
     timer = Timer(
       const Duration(seconds: 2),
       () {
-        GoRouter.of(context).go('/idle/mode_select');
+        ref.read(kimeraNotifierProvider.notifier).connected();
       },
     );
   }

@@ -7,29 +7,25 @@ class IdleView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final onStartScan = ref.read(pairingNotifierProvider.notifier).startScan;
-    return MaterialApp(
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('kiMera設定アプリ'),
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('kiMera設定アプリ'),
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        ),
-        body: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text('kiMera未接続'),
-              const SizedBox(height: 64),
-              ElevatedButton(
-                onPressed: onStartScan,
-                child: const Text('スキャン開始'),
-              ),
-            ],
-          ),
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('kiMera未接続'),
+            const SizedBox(height: 64),
+            ElevatedButton(
+              onPressed: () {
+                ref.read(pairingNotifierProvider.notifier).disconnect();
+                ref.read(pairingNotifierProvider.notifier).startScan();
+              },
+              child: const Text('スキャン開始'),
+            ),
+          ],
         ),
       ),
     );
