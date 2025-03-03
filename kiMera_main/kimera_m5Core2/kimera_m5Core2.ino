@@ -4,8 +4,8 @@
 //ヴァイオリン
 //pa.hub
 #include "ClosedCube_TCA9548A.h"
-#include <Unit_Sonic.h>//超音波
-#include "IMU_6886.h"//加速度
+#include <Unit_Sonic.h>　　//超音波
+#include "IMU_6886.h"　　　//加速度
 
 ClosedCube::Wired::TCA9548A tca;
 const uint8_t JOY_CHANNEL = 1;       // ジョイスティックを接続するチャンネル
@@ -61,7 +61,7 @@ int prev_note = -1;
 int mode = 0;
 int previousMode = 0;
 
-//ボタン
+//M5の画面の仮想ボタン
 ButtonColors cl_on  = {0x7BEF, 0x7f7f7f, 0x7f7f7f}; // タップした時の色 (背景, 文字列, ボーダー)
 ButtonColors cl_p = {BLACK, WHITE, BLACK}; // 指を離した時の色 (背景, 文字列, ボーダー)
 ButtonColors cl_v = {0xCB8D4A, WHITE, 0xCB8D4A}; // 指を離した時の色 (背景, 文字列, ボーダー)
@@ -72,6 +72,22 @@ Button btn_p(200, 20, 90, 35, false , "piano", cl_p, cl_on);
 Button btn_v(200, 75, 90, 35, false , "violin", cl_v, cl_on);
 Button btn_t(200, 130, 90, 35, false , "trumpet", cl_t, cl_on);
 Button btn_f(200, 185, 90, 35, false , "flute", cl_f, cl_on);
+
+//BLE
+#include "Ble.hpp"
+const char* DEVICE_NAME = "kiMera";
+const char* SERVICE_UUID = "4fafc201-1fb5-459e-8fcc-c5c9c331914b";
+const char* CHARACTERISTIC_UUID = "beb5483e-36e1-4688-b7f5-ea07361b26a8";
+
+
+void on_message_received(String message) {
+  //bleでアプリから送られた値をmodeとして受け取る(1~4)
+  mode = toInt(message);
+}
+
+//これ書いとけばon_message_receivedは勝手にとってきてくれるのかな？
+cps::ble::Controller ble{DEVICE_NAME, SERVICE_UUID, CHARACTERISTIC_UUID,
+                         on_message_received};
 
 void setup() {
   M5.begin();
@@ -96,6 +112,7 @@ void loop() {
 
   // モードが変更された場合のみセット関数を呼び出す
   if (mode != previousMode) {
+    
     Serial1.write(mode);
     for (int i = 1; i <= 4; i++) {
       synth.setAllNotesOff(i);

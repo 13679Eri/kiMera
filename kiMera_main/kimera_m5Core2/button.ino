@@ -16,23 +16,27 @@ void set_button() {
 void event_btn_p(Event & e) {
   if (e == E_TOUCH) {
     mode = 1;
+    ble_send(mode);
   }
 }
 
 void event_btn_v(Event & e) {
   if (e == E_TOUCH) {
     mode = 2;
+    ble_send(mode);
   }
 }
 
 void event_btn_t(Event & e) {
   if (e == E_TOUCH) {
     mode = 3;
+    ble_send(mode);
   }
 }
 
 void event_btn_f(Event & e) {
   if (e == E_TOUCH) {
     mode = 4;
+    ble_send(mode);
   }
 }
