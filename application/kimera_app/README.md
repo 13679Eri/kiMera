@@ -13,3 +13,14 @@
   - 状態管理用
 - Flutter reactive BLE
   - [APIドキュメント](https://pub.dev/documentation/flutter_reactive_ble/latest/)
+
+## 通信用プロトコル
+スキーマ
+``` json
+{ "mode": piano | trumpet | flute | violin }
+```
+
+例  
+`{ "mode": piano }`  
+`{ "mode": flute }`  
+
