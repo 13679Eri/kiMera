@@ -4,17 +4,17 @@
 //ヴァイオリン
 //pa.hub
 #include "ClosedCube_TCA9548A.h"
-#include <Unit_Sonic.h>　　//超音波
-#include "IMU_6886.h"　　　//加速度
+#include <Unit_Sonic.h>　　  //超音波
+#include "IMU_6886.h"　　　  //加速度
 
 ClosedCube::Wired::TCA9548A tca;
-const uint8_t JOY_CHANNEL = 1;       // ジョイスティックを接続するチャンネル
-const uint8_t ULTRASONIC_CHANNEL = 2; // 超音波センサを接続するチャンネル
-const uint8_t IMU_CHANNEL = 3;       // 加速度センサを接続するチャンネル
+const uint8_t JOY_CHANNEL = 1;         // ジョイスティックを接続するチャンネル
+const uint8_t ULTRASONIC_CHANNEL = 2;  // 超音波センサを接続するチャンネル
+const uint8_t IMU_CHANNEL = 3;         // 加速度センサを接続するチャンネル
 
-IMU_6886 imu6886; //加速度
-SONIC_I2C sensor; //超音波
-#define JOY_ADDR 0x52     //ジョイスティック
+IMU_6886 imu6886;      //加速度
+SONIC_I2C sensor;      //超音波
+#define JOY_ADDR 0x52  //ジョイスティック
 
 //violinのグローバル変数
 float accX = 0;
@@ -38,7 +38,7 @@ float mainbody_ag = 0;
 #include "fft.h"
 #include <math.h>
 
-#define PIN_CLK  19
+#define PIN_CLK 19
 #define PIN_DATA 27
 #define MODE_MIC 0
 
@@ -47,7 +47,7 @@ int patern = 0;
 //MIDI
 #include "M5UnitSynth.h"
 M5UnitSynth synth;
-int note_color[4] = {1 , 41, 57, 74};
+int note_color[4] = { 1, 41, 57, 74 };
 
 // 受信データ格納
 int ch = 0;
@@ -62,46 +62,73 @@ int mode = 0;
 int previousMode = 0;
 
 //M5の画面の仮想ボタン
-ButtonColors cl_on  = {0x7BEF, 0x7f7f7f, 0x7f7f7f}; // タップした時の色 (背景, 文字列, ボーダー)
-ButtonColors cl_p = {BLACK, WHITE, BLACK}; // 指を離した時の色 (背景, 文字列, ボーダー)
-ButtonColors cl_v = {0xCB8D4A, WHITE, 0xCB8D4A}; // 指を離した時の色 (背景, 文字列, ボーダー)
-ButtonColors cl_t = {0xFFDD31, WHITE, 0xFFDD31}; // 指を離した時の色 (背景, 文字列, ボーダー)
-ButtonColors cl_f = {0xDEDCD7, WHITE, 0xDEDCD7}; // 指を離した時の色 (背景, 文字列, ボーダー)
+ButtonColors cl_on = { 0x7BEF, 0x7f7f7f, 0x7f7f7f };  // タップした時の色 (背景, 文字列, ボーダー)
+ButtonColors cl_p = { BLACK, WHITE, BLACK };          // 指を離した時の色 (背景, 文字列, ボーダー)
+ButtonColors cl_v = { 0xCB8D4A, WHITE, 0xCB8D4A };    // 指を離した時の色 (背景, 文字列, ボーダー)
+ButtonColors cl_t = { 0xFFDD31, WHITE, 0xFFDD31 };    // 指を離した時の色 (背景, 文字列, ボーダー)
+ButtonColors cl_f = { 0xDEDCD7, WHITE, 0xDEDCD7 };    // 指を離した時の色 (背景, 文字列, ボーダー)
 
-Button btn_p(200, 20, 90, 35, false , "piano", cl_p, cl_on);
-Button btn_v(200, 75, 90, 35, false , "violin", cl_v, cl_on);
-Button btn_t(200, 130, 90, 35, false , "trumpet", cl_t, cl_on);
-Button btn_f(200, 185, 90, 35, false , "flute", cl_f, cl_on);
+Button btn_p(200, 20, 90, 35, false, "piano", cl_p, cl_on);
+Button btn_v(200, 75, 90, 35, false, "violin", cl_v, cl_on);
+Button btn_t(200, 130, 90, 35, false, "trumpet", cl_t, cl_on);
+Button btn_f(200, 185, 90, 35, false, "flute", cl_f, cl_on);
 
 //BLE
 #include "Ble.hpp"
+#include <ArduinoJson.h>  //json
+
 const char* DEVICE_NAME = "kiMera";
 const char* SERVICE_UUID = "4fafc201-1fb5-459e-8fcc-c5c9c331914b";
 const char* CHARACTERISTIC_UUID = "beb5483e-36e1-4688-b7f5-ea07361b26a8";
 
-
 void on_message_received(String message) {
   //bleでアプリから送られた値をmodeとして受け取る(1~4)
-  mode = toInt(message);
+  StaticJsonDocument<128> doc;
+  DeserializationError error = deserializeJson(doc, message);
+  // デバック
+  // if (error) {
+  //   Serial.println("JSON parsing failed!");
+  //   return;
+  // }
+
+  // "mode" キーの値を取得
+  String modeStr = doc["mode"].as<String>();
+
+  // 文字列から mode の数値に変換
+  if (modeStr == "piano") {
+    mode = 1;
+  } else if (modeStr == "violin") {
+    mode = 2;
+  } else if (modeStr == "trumpet") {
+    mode = 3;
+  } else if (modeStr == "flute") {
+    mode = 4;
+  } else {
+    // Serial.println("Unknown mode received!");
+    return;
+  }
 }
 
 //これ書いとけばon_message_receivedは勝手にとってきてくれるのかな？
-cps::ble::Controller ble{DEVICE_NAME, SERVICE_UUID, CHARACTERISTIC_UUID,
-                         on_message_received};
+cps::ble::Controller ble{ DEVICE_NAME, SERVICE_UUID, CHARACTERISTIC_UUID,
+                          on_message_received };
 
 void setup() {
   M5.begin();
 
   //シリアル
   //  Serial.begin(115200);
-  Serial1.begin(115200, SERIAL_8N1, 13, 14); //nanoから受け取る
-  Serial2.begin(115200, SERIAL_8N1, 3, 1); //MIDI
+  Serial1.begin(115200, SERIAL_8N1, 13, 14);  //nanoから受け取る
+  Serial2.begin(115200, SERIAL_8N1, 3, 1);    //MIDI
 
   //ボタン
   set_button();
 
   //センサ 超音波 加速度 JOYSTICK PDM MIDI
   set_sensor();
+
+  //bleセットアップ
+  set_ble();
 
   //最初のモード変更
   mode = 1;
@@ -112,7 +139,7 @@ void loop() {
 
   // モードが変更された場合のみセット関数を呼び出す
   if (mode != previousMode) {
-    
+
     Serial1.write(mode);
     for (int i = 1; i <= 4; i++) {
       synth.setAllNotesOff(i);
@@ -132,7 +159,7 @@ void loop() {
       set_flute();
       //      Serial.println("flute");
     }
-    previousMode = mode; // 前回のモードを更新
+    previousMode = mode;  // 前回のモードを更新
   }
 
   // 現在のモードに基づいて関数を呼び出す
@@ -150,5 +177,5 @@ void loop() {
       flute();
       break;
   }
-  delay(10); // 少し待機してから再度ループ
+  delay(10);  // 少し待機してから再度ループ
 }
