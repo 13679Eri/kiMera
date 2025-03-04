@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'dart:async';
+
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class ConnectedView extends StatefulWidget {
@@ -14,15 +15,17 @@ class ConnectedViewState extends State<ConnectedView> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text('接続完了'),
-          const SizedBox(height: 16),
-          const CircularProgressIndicator(),
-        ],
-      ),
+    return Material(
+      child:Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('接続完了'),
+            const SizedBox(height: 16),
+            const CircularProgressIndicator(),
+          ],
+        ),
+      )
     );
   }
 

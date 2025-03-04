@@ -10,18 +10,21 @@ class ErrorView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final onRetry = ref.read(pairingNotifierProvider.notifier).startScan;
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text('エラー: $message'),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: onRetry,
-            child: const Text('リトライ'),
-          ),
-        ],
-      ),
+    return Material(
+      child:
+      Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('エラー: $message'),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: onRetry,
+              child: const Text('リトライ'),
+            ),
+          ],
+        ),
+      )
     );
   }
 }
