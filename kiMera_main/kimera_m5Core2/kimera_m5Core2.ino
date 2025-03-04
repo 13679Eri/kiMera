@@ -1,4 +1,15 @@
 #include <M5Core2.h>
+//kiMera 1号機ピンク2号機スイカの設定
+int kiMera = 1;
+//以下機種によってコメントアウトすべし
+//kiMera 1号機
+const char* SERVICE_UUID = "4fafc201-1fb5-459e-8fcc-c5c9c331914b";
+const char* CHARACTERISTIC_UUID = "beb5483e-36e1-4688-b7f5-ea07361b26a8";
+
+// //kiMera 2号機
+// const char* SERVICE_UUID = "4fafc201-1fb5-459e-8fcc-c5c9c331914b";
+// const char* CHARACTERISTIC_UUID = "beb5483e-36e1-4688-b7f5-ea07361b26a8";
+
 
 //センサ
 //ヴァイオリン
@@ -64,9 +75,9 @@ int previousMode = 0;
 //M5の画面の仮想ボタン
 ButtonColors cl_on = { 0x7BEF, 0x7f7f7f, 0x7f7f7f };  // タップした時の色 (背景, 文字列, ボーダー)
 ButtonColors cl_p = { BLACK, WHITE, BLACK };          // 指を離した時の色 (背景, 文字列, ボーダー)
-ButtonColors cl_v = { 0xCB8D4A, WHITE, 0xCB8D4A };    // 指を離した時の色 (背景, 文字列, ボーダー)
-ButtonColors cl_t = { 0xFFDD31, WHITE, 0xFFDD31 };    // 指を離した時の色 (背景, 文字列, ボーダー)
-ButtonColors cl_f = { 0xDEDCD7, WHITE, 0xDEDCD7 };    // 指を離した時の色 (背景, 文字列, ボーダー)
+ButtonColors cl_v = { 0xcb43, WHITE, 0xcb43 };    // 指を離した時の色 (背景, 文字列, ボーダー)
+ButtonColors cl_t = { 0xfea0, WHITE, 0xfea0 };    // 指を離した時の色 (背景, 文字列, ボーダー)
+ButtonColors cl_f = { 0xd69a, WHITE, 0xd69a };    // 指を離した時の色 (背景, 文字列, ボーダー)
 
 Button btn_p(200, 20, 90, 35, false, "piano", cl_p, cl_on);
 Button btn_v(200, 75, 90, 35, false, "violin", cl_v, cl_on);
@@ -78,8 +89,6 @@ Button btn_f(200, 185, 90, 35, false, "flute", cl_f, cl_on);
 #include <ArduinoJson.h>  //json
 
 const char* DEVICE_NAME = "kiMera";
-const char* SERVICE_UUID = "4fafc201-1fb5-459e-8fcc-c5c9c331914b";
-const char* CHARACTERISTIC_UUID = "beb5483e-36e1-4688-b7f5-ea07361b26a8";
 
 void on_message_received(String message) {
   //bleでアプリから送られた値をmodeとして受け取る(1~4)
