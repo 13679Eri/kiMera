@@ -27,26 +27,26 @@ class ModeSelectView extends ConsumerWidget {
           child: Column(
             children: [
               ElevatedButton(
-                onPressed: () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => const PianoView())),
+                onPressed: () =>
+                    ref.read(kimeraNotifierProvider.notifier).pianoMode(),
                 child: const Text('ピアノモード'),
               ),
               const SizedBox(height: 8),
               ElevatedButton(
-                onPressed: () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => const FluteView())),
+                onPressed: () =>
+                    ref.read(kimeraNotifierProvider.notifier).fluteMode(),
                 child: const Text('フルートモード'),
               ),
               const SizedBox(height: 8),
               ElevatedButton(
-                onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const TrumpetView())),
+                onPressed: () =>
+                    ref.read(kimeraNotifierProvider.notifier).trumpetMode(),
                 child: const Text('トランペットモード'),
               ),
               const SizedBox(height: 8),
               ElevatedButton(
-                onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const ViolinView())),
+                onPressed: () =>
+                    ref.read(kimeraNotifierProvider.notifier).violinMode(),
                 child: const Text('バイオリンモード'),
               ),
               const SizedBox(height: 8),

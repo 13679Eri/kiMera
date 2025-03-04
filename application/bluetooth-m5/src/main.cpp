@@ -6,13 +6,18 @@ const char* DEVICE_NAME = "kiMera";
 const char* SERVICE_UUID = "4fafc201-1fb5-459e-8fcc-c5c9c331914b";
 const char* CHARACTERISTIC_UUID = "beb5483e-36e1-4688-b7f5-ea07361b26a8";
 
-void on_message_received(String message) {
-  M5.Power.setLed(255);
-  M5.Display.print(message);
-}
+void on_message_received(String message);
 
 cps::ble::Controller ble{DEVICE_NAME, SERVICE_UUID, CHARACTERISTIC_UUID,
                          on_message_received};
+
+void on_message_received(String message) {
+  M5.Power.setLed(255);
+  M5.Display.print(message + "\n");
+  delay(10000);
+  M5.Power.setLed(0);
+  ble.send("{\"mode\":\"violin\"}");
+}
 
 void setup() {
   auto cfg = M5.config();  // M5Stack初期設定用の構造体を代入
@@ -23,7 +28,7 @@ void setup() {
   M5.Log.setEnableColor(m5::log_target_serial, true);
   M5.Log.setEnableColor(m5::log_target_display, true);
   M5.Display.setTextSize(3);
-  M5.Display.print("setup");
+  M5.Display.print("setup\n");
 
   M5.Power.setLed(0);
 

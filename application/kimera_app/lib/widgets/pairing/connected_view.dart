@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kimera_app/notifiers/kimera_notifier.dart';
+import 'package:kimera_app/notifiers/pairing_notifier.dart';
 
 class ConnectedView extends ConsumerStatefulWidget {
   const ConnectedView({super.key});
@@ -34,6 +35,7 @@ class ConnectedViewState extends ConsumerState<ConnectedView> {
     timer = Timer(
       const Duration(seconds: 2),
       () {
+        ref.read(pairingNotifierProvider.notifier).subscribe();
         ref.read(kimeraNotifierProvider.notifier).connected();
       },
     );

@@ -5,7 +5,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../models/pairing_state.dart';
+import 'package:kimera_app/models/pairing_state.dart';
+import 'package:kimera_app/notifiers/kimera_notifier.dart';
 
 part 'pairing_notifier.g.dart';
 
@@ -53,7 +54,7 @@ class PairingNotifier extends _$PairingNotifier {
 
   /// スキャン開始
   void startScan() {
-    debugPrint("startScan");
+    debugPrint("pairingNotifier: startScan");
     _retryCount = 0;
     state = const Scanning();
 
@@ -73,14 +74,14 @@ class PairingNotifier extends _$PairingNotifier {
 
   /// スキャン停止
   void _stopScan() {
-    debugPrint("stopScan");
+    debugPrint("pairingNotifier: stopScan");
     _scanSubscription?.cancel();
     _scanSubscription = null;
   }
 
   /// 指定されたデバイスに接続
   void _connect(DiscoveredDevice device) {
-    debugPrint("connect: ${device.name}");
+    debugPrint("pairingNotifier: connect: ${device.name}");
     state = Connecting(deviceName: device.name);
     _connectionSubscription = _ble
         .connectToDevice(
@@ -123,6 +124,7 @@ class PairingNotifier extends _$PairingNotifier {
 
   /// characteristic の値を読み出す
   Future<String?> readCharacteristic() async {
+    debugPrint("pairingNotifier: readCharacteristic");
     assert(_connectedDevice != null);
     try {
       final data = await _ble.readCharacteristic(_characteristic!);
@@ -135,6 +137,7 @@ class PairingNotifier extends _$PairingNotifier {
 
   /// characteristic に値を書き込む（「Write」ボタン用）
   Future<void> writeCharacteristic(String value) async {
+    debugPrint("pairingNotifier: writeCharacteristic");
     assert(_connectedDevice != null);
     try {
       final data = utf8.encode(value);
@@ -146,8 +149,6 @@ class PairingNotifier extends _$PairingNotifier {
   }
 
   /// 通知購読
-  // これ、デバイスが切断されない限りリターンしない気がする。外から呼ぶ形では使いづらいかも。コールバック関数を渡せばいけるのかも。
-  // 一旦デバッグプリント用にして残してある。
   Future<void> subscribe() async {
     assert(_connectedDevice != null);
     try {
@@ -155,6 +156,8 @@ class PairingNotifier extends _$PairingNotifier {
           _ble.subscribeToCharacteristic(_characteristic!).listen(
         (data) {
           debugPrint('Received data: $data');
+          String message = utf8.decode(data);
+          ref.read(kimeraNotifierProvider.notifier).onReceivedMessage(message);
         },
         onError: (error) {
           state = PairingError(message: 'Notify error: $error');
@@ -163,14 +166,6 @@ class PairingNotifier extends _$PairingNotifier {
     } catch (e) {
       state = PairingError(message: 'Subscribe error: $e');
     }
-  }
-
-  /// 通知購読を解除する
-  Future<void> unsubscribe() async {
-    assert(_connectedDevice != null);
-    await _notifySubscription?.cancel();
-    _notifySubscription = null;
-    state = Connected();
   }
 
   /// 切断
@@ -182,7 +177,6 @@ class PairingNotifier extends _$PairingNotifier {
       return;
     }
 
-    _scanSubscription?.cancel();
     _notifySubscription?.cancel();
     _connectionSubscription?.cancel();
     _connectedDevice = null;

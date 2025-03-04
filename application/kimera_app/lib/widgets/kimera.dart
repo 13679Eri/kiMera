@@ -5,6 +5,10 @@ import 'package:kimera_app/notifiers/kimera_notifier.dart';
 import 'package:kimera_app/models/kimera_state.dart';
 import 'package:kimera_app/widgets/pairing/pairing_consumer.dart';
 import 'package:kimera_app/widgets/kimera/mode_select.dart';
+import 'package:kimera_app/widgets/kimera/piano_view.dart';
+import 'package:kimera_app/widgets/kimera/trumpet_view.dart';
+import 'package:kimera_app/widgets/kimera/flute_view.dart';
+import 'package:kimera_app/widgets/kimera/violin_view.dart';
 
 class Kimera extends ConsumerWidget {
   const Kimera({super.key});
@@ -15,6 +19,10 @@ class Kimera extends ConsumerWidget {
     return switch (kimeraState) {
       Pairing() => PairingConsumer(),
       ModeSelect() => ModeSelectView(),
+      Piano() => PianoView(),
+      Trumpet() => TrumpetView(),
+      Flute() => FluteView(),
+      Violin() => ViolinView(),
     };
   }
 }

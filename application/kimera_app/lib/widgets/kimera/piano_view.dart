@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:kimera_app/notifiers/pairing_notifier.dart';
+import 'package:kimera_app/models/json_schema.dart';
+import 'package:kimera_app/notifiers/kimera_notifier.dart';
 
 class PianoView extends ConsumerStatefulWidget {
   const PianoView({super.key});
@@ -16,10 +16,10 @@ class PianoViewState extends ConsumerState<PianoView> {
   @override
   void initState() {
     super.initState();
-    //TODO: json_serializableを使って、jsonを作成する
-    ref
-        .read(pairingNotifierProvider.notifier)
-        .writeCharacteristic("{\"mode\": \"piano\"}");
+    JsonSchema filled = JsonSchema(
+      mode: Instruments.piano,
+    );
+    ref.read(kimeraNotifierProvider.notifier).send(filled);
   }
 
   void _incrementTranspose() {
@@ -57,9 +57,9 @@ class PianoViewState extends ConsumerState<PianoView> {
               ),
               ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    ref.read(kimeraNotifierProvider.notifier).modeSelect();
                   },
-                  child: const Text('戻る')),
+                  child: const Text('モードセレクト画面に戻る')),
             ],
           ),
         ],
