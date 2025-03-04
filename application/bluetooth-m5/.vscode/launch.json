@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "lldb",
+      "request": "launch",
+      "args": [],
+      "cwd": "/Users/yataerina/Documents/Arduino/kiMera/application/bluetooth-m5/src",
+      "program": "/Users/yataerina/Documents/Arduino/kiMera/application/bluetooth-m5/src/build/Debug/outDebug"
+    }
+  ]
+}
