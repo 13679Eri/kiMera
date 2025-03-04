@@ -6,7 +6,10 @@ const char* DEVICE_NAME = "kiMera";
 const char* SERVICE_UUID = "4fafc201-1fb5-459e-8fcc-c5c9c331914b";
 const char* CHARACTERISTIC_UUID = "beb5483e-36e1-4688-b7f5-ea07361b26a8";
 
-void on_message_received(const String& message) { M5.Display.print(message); }
+void on_message_received(String message) {
+  M5.Power.setLed(255);
+  M5.Display.print(message);
+}
 
 cps::ble::Controller ble{DEVICE_NAME, SERVICE_UUID, CHARACTERISTIC_UUID,
                          on_message_received};
@@ -27,16 +30,4 @@ void setup() {
   ble.setup_after_begin();
 }
 
-void loop() {
-  M5.update();
-  M5.Display.print("loop");
-
-  // notify changed value
-  if (ble.isDeviceConnected()) {
-    M5.Power.setLed(255);
-    M5.Display.print("connected");
-    ble.send("Hello, World!");
-  }
-
-  delay(5000);
-}
+void loop() { M5.update(); }

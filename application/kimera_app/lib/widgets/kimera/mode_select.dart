@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kimera_app/notifiers/kimera_notifier.dart';
 import 'package:go_router/go_router.dart';
+import 'package:kimera_app/notifiers/pairing_notifier.dart';
 import 'package:kimera_app/widgets/kimera/piano_view.dart';
 import 'package:kimera_app/widgets/kimera/flute_view.dart';
 import 'package:kimera_app/widgets/kimera/trumpet_view.dart';
@@ -49,9 +51,10 @@ class ModeSelectView extends ConsumerWidget {
               ),
               const SizedBox(height: 8),
               ElevatedButton(
-                child: const Text('戻る'),
+                child: const Text('もどる'),
                 onPressed: () {
-                  GoRouter.of(context).pop();
+                  ref.read(pairingNotifierProvider.notifier).disconnect();
+                  ref.read(kimeraNotifierProvider.notifier).restart();
                 },
               ),
             ],

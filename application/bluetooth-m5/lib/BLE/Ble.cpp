@@ -24,26 +24,22 @@ MyWriteCallbacks::MyWriteCallbacks(Controller* controller)
 
 void MyWriteCallbacks::onWrite(BLECharacteristic* characteristic) {
   String value = characteristic->getValue().c_str();
-  if (value.length() != 0) {
-    if (controller_) {
-      controller_->on_message_received_(value);
-    }
-  }
+  controller_->on_message_received_(value);
 }
 
 // Controller の実装
 Controller::Controller(const char* device_name, const char* serv_uuid,
                        const char* chara_uuid,
-                       void (*on_message_received)(const String&))
+                       void (*on_message_received)(String))
     : device_name_(device_name),
       serv_uuid_(serv_uuid),
       chara_uuid_(chara_uuid),
       server_(nullptr),
       characteristic_(nullptr),
       deviceConnected_(false),
-      myCallbacks_(this),  // コールバックに自身のポインタを渡す
+      myServerCallbacks_(this),  // コールバックに自身のポインタを渡す
       myWriteCallbacks_(this),
-      on_message_received_(on_message_received){};
+      on_message_received_(on_message_received) {};
 
 void Controller::setup_after_begin() {
   // BLEデバイスの初期化
@@ -51,7 +47,7 @@ void Controller::setup_after_begin() {
 
   // BLEサーバの作成
   server_ = BLEDevice::createServer();
-  server_->setCallbacks(&myCallbacks_);
+  server_->setCallbacks(&myServerCallbacks_);
 
   // BLEサービスの作成
   BLEService* pService = server_->createService(serv_uuid_);
@@ -62,6 +58,7 @@ void Controller::setup_after_begin() {
                        BLECharacteristic::PROPERTY_WRITE |
                        BLECharacteristic::PROPERTY_NOTIFY |
                        BLECharacteristic::PROPERTY_INDICATE);
+  characteristic_->setCallbacks(&myWriteCallbacks_);
 
   // BLEディスクリプタ（0x2902）の追加
   auto descriptor = new BLE2902();
