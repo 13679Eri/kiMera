@@ -26,7 +26,23 @@ void ble_send(int mode) {  //mode(ch) midinumber(note) velo notecolor 適宜増�
   }
 
   StaticJsonDocument<64> doc;
-  doc["mode"] = mode;
+  String inst;
+  // 文字列から mode の数値に変換
+
+  if (mode == 1) {
+    inst = "piano";
+  } else if (mode == 2) {
+    inst = "violin";
+  } else if (mode == 3) {
+    inst = "trumpet";    
+  } else if (mode == 4) {
+    inst = "flute";
+  } else {
+    // Serial.println("Unknown mode received!");
+    return;
+  }
+  
+  doc["mode"] = inst;
 
   String send_info_json;
   serializeJson(doc, send_info_json);  // JSON を String に変換

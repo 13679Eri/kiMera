@@ -1,15 +1,18 @@
 #include <M5Core2.h>
 //kiMera 1号機ピンク2号機スイカの設定
-int kiMera = 1;
-//以下機種によってコメントアウトすべし
-//kiMera 1号機
-const char* SERVICE_UUID = "4fafc201-1fb5-459e-8fcc-c5c9c331914b";
-const char* CHARACTERISTIC_UUID = "beb5483e-36e1-4688-b7f5-ea07361b26a8";
+/*  切り替え */
+#define KIMERA1
+// #define KIMERA2
 
-// //kiMera 2号機
-// const char* SERVICE_UUID = "4fafc201-1fb5-459e-8fcc-c5c9c331914b";
-// const char* CHARACTERISTIC_UUID = "beb5483e-36e1-4688-b7f5-ea07361b26a8";
+#ifdef KIMERA1
+  const char* DEVICE_NAME = "kiMera1";
+  int kiMera = 1;
+#endif
 
+#ifdef KIMERA2
+  const char* DEVICE_NAME = "kiMera2";
+  int kiMera = 2;
+#endif
 
 //センサ
 //ヴァイオリン
@@ -88,7 +91,8 @@ Button btn_f(200, 185, 90, 35, false, "flute", cl_f, cl_on);
 #include "Ble.hpp"
 #include <ArduinoJson.h>  //json
 
-const char* DEVICE_NAME = "kiMera";
+const char* SERVICE_UUID = "4fafc201-1fb5-459e-8fcc-c5c9c331914b";
+const char* CHARACTERISTIC_UUID = "beb5483e-36e1-4688-b7f5-ea07361b26a8";
 
 void on_message_received(String message) {
   //bleでアプリから送られた値をmodeとして受け取る(1~4)
