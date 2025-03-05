@@ -29,12 +29,12 @@ class KimeraNotifier extends _$KimeraNotifier {
     ref.read(pairingNotifierProvider.notifier).writeCharacteristic(jsonStr);
   }
 
-  void onReceivedMessage(String message) {
+  void onReceivedMessage(String message_cstr) {
+    //Null文字を削除
+    String message = message_cstr.replaceAll('\u0000', '');
     debugPrint("kimeraNotifier: onReceivedMessage: $message");
     var jsonMap = json.decode(message);
-    debugPrint(jsonMap);
     var received = JsonSchema.fromJson(jsonMap);
-    debugPrint(json.encode(received.toJson()));
     state = switch (received.mode) {
       Instruments.piano => const Piano(),
       Instruments.trumpet => const Trumpet(),
