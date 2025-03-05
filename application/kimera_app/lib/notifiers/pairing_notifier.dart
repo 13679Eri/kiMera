@@ -13,7 +13,7 @@ part 'pairing_notifier.g.dart';
 @Riverpod(keepAlive: true)
 class PairingNotifier extends _$PairingNotifier {
   // 定数の設定
-  static const String _deviceNamePattern = 'kiMera';
+  static const String _deviceNamePattern = 'kiMera1';
   static final Uuid _serviceUuid =
       Uuid.parse('4fafc201-1fb5-459e-8fcc-c5c9c331914b');
   static final Uuid _characteristicUuid =

@@ -3,21 +3,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kimera_app/models/json_schema.dart';
 import 'package:kimera_app/notifiers/kimera_notifier.dart';
 
-class ViolinView extends ConsumerStatefulWidget {
-  const ViolinView({super.key});
+class TrumpetView extends ConsumerStatefulWidget {
+  const TrumpetView({super.key});
 
   @override
-  ViolinViewState createState() => ViolinViewState();
+  TrumpetViewState createState() => TrumpetViewState();
 }
 
-class ViolinViewState extends ConsumerState<ViolinView> {
+class TrumpetViewState extends ConsumerState<TrumpetView> {
   int transpose = 0;
 
   @override
   void initState() {
     super.initState();
     JsonSchema filled = JsonSchema(
-      mode: Instruments.violin,
+      mode: Instruments.trumpet,
     );
     ref.read(kimeraNotifierProvider.notifier).send(filled);
   }
@@ -40,7 +40,7 @@ class ViolinViewState extends ConsumerState<ViolinView> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text('Violin画面'),
+          Text('Trumpet画面'),
           Text('transpose: $transpose'),
           //トランスポーズボタン
           Row(
