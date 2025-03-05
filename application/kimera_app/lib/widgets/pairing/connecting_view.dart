@@ -7,7 +7,8 @@ class ConnectingView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return  Material(
+      child: Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -16,6 +17,8 @@ class ConnectingView extends StatelessWidget {
           const CircularProgressIndicator(),
         ],
       ),
+    )
     );
+    
   }
 }
