@@ -36,10 +36,12 @@ class FluteViewState extends ConsumerState<FluteView> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return Material(
+      child:Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          Image.asset('assets/flute.png'),
           Text('Flute画面'),
           Text('transpose: $transpose'),
           //トランスポーズボタン
@@ -63,6 +65,7 @@ class FluteViewState extends ConsumerState<FluteView> {
             ],
           ),
         ],
+      ),
       ),
     );
   }

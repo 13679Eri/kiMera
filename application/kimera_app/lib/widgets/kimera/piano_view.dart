@@ -36,10 +36,11 @@ class PianoViewState extends ConsumerState<PianoView> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
+return Material(    
+  child: Center(      child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          Image.asset('assets/piano.png'),
           Text('Piano画面'),
           Text('transpose: $transpose'),
           //トランスポーズボタン
@@ -63,7 +64,6 @@ class PianoViewState extends ConsumerState<PianoView> {
             ],
           ),
         ],
-      ),
-    );
+);
   }
 }

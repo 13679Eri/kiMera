@@ -36,11 +36,13 @@ class TrumpetViewState extends ConsumerState<TrumpetView> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return Material(
+      child:Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text('Trumpet画面'),
+          Image.asset('assets/trumpet.png'),
+Text('Trumpet画面'),
           Text('transpose: $transpose'),
           //トランスポーズボタン
           Row(
@@ -62,7 +64,8 @@ class TrumpetViewState extends ConsumerState<TrumpetView> {
                   child: const Text('モードセレクト画面に戻る')),
             ],
           ),
-        ],
+],
+      ),
       ),
     );
   }

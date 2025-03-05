@@ -36,10 +36,11 @@ class ViolinViewState extends ConsumerState<ViolinView> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          Image.asset('assets/violin.png'),
           Text('Violin画面'),
           Text('transpose: $transpose'),
           //トランスポーズボタン
@@ -64,6 +65,5 @@ class ViolinViewState extends ConsumerState<ViolinView> {
           ),
         ],
       ),
-    );
   }
 }
