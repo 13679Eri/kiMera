@@ -6,7 +6,7 @@ part of 'kimera_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$kimeraNotifierHash() => r'6303c96fd18605ed9f66b4872bc60fc6b6bbe988';
+String _$kimeraNotifierHash() => r'f121a40c43ffb9ff5dd4bd7c4302fbed1fbc363c';
 
 /// See also [KimeraNotifier].
 @ProviderFor(KimeraNotifier)

@@ -5,14 +5,16 @@ class ScanningView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: const [
-          Text('スキャン中...'),
-          SizedBox(height: 16),
-          CircularProgressIndicator(),
-        ],
+    return Material(
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: const [
+            Text('スキャン中...'),
+            SizedBox(height: 16),
+            CircularProgressIndicator(),
+          ],
+        ),
       ),
     );
   }
