@@ -7,6 +7,7 @@ environment:
   sdk: ^3.6.0
 
 dependencies:
+  collection: ^1.19.0
   flutter:
     sdk: flutter
   flutter_reactive_ble: ^5.4.0
