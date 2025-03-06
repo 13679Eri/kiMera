@@ -45,23 +45,27 @@ class PianoViewState extends ConsumerState<PianoView> {
             Text('Piano画面'),
             Text('transpose: $transpose'),
             //トランスポーズボタン
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            Column(
               children: [
-                ElevatedButton(
-                  onPressed: _incrementTranspose,
-                  child: const Text('+1'),
-                ),
-                const SizedBox(width: 16),
-                ElevatedButton(
-                  onPressed: _decrementTranspose,
-                  child: const Text('-1'),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: _incrementTranspose,
+                      child: const Text('+1'),
+                    ),
+                    const SizedBox(width: 16),
+                    ElevatedButton(
+                      onPressed: _decrementTranspose,
+                      child: const Text('-1'),
+                    ),
+                  ],
                 ),
                 ElevatedButton(
                     onPressed: () {
                       ref.read(kimeraNotifierProvider.notifier).modeSelect();
                     },
-                    child: const Text('モードセレクト画面に戻る')),
+                    child: const Text('モードセレクト画面に戻る'))
               ],
             ),
           ],

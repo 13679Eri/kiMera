@@ -43,25 +43,29 @@ class TrumpetViewState extends ConsumerState<TrumpetView> {
           children: [
             Image.asset('assets/trumpet.png'),
             Text('Trumpet画面'),
-            Text('transpose: $transpose'),
+            Text('消音: $transpose'),
             //トランスポーズボタン
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            Column(
               children: [
-                ElevatedButton(
-                  onPressed: _incrementTranspose,
-                  child: const Text('+1'),
-                ),
-                const SizedBox(width: 16),
-                ElevatedButton(
-                  onPressed: _decrementTranspose,
-                  child: const Text('-1'),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: _incrementTranspose,
+                      child: const Text('消音あり'),
+                    ),
+                    const SizedBox(width: 16),
+                    ElevatedButton(
+                      onPressed: _decrementTranspose,
+                      child: const Text('消音なし'),
+                    ),
+                  ],
                 ),
                 ElevatedButton(
                     onPressed: () {
                       ref.read(kimeraNotifierProvider.notifier).modeSelect();
                     },
-                    child: const Text('モードセレクト画面に戻る')),
+                    child: const Text('モードセレクト画面に戻る'))
               ],
             ),
           ],

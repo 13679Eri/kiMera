@@ -9,21 +9,21 @@ class IdleView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('kiMera設定アプリ'),
+        title: const Text('kiMera App  v1.0'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('kiMera未接続'),
+            const Text('kiMeraが接続されていません'),
             const SizedBox(height: 64),
             ElevatedButton(
               onPressed: () {
                 ref.read(pairingNotifierProvider.notifier).disconnect();
                 ref.read(pairingNotifierProvider.notifier).startScan();
               },
-              child: const Text('スキャン開始'),
+              child: const Text('指定したkiMeraとペアリングする'),
             ),
           ],
         ),

@@ -43,25 +43,29 @@ class ViolinViewState extends ConsumerState<ViolinView> {
           children: [
             Image.asset('assets/violin.png'),
             Text('Violin画面'),
-            Text('transpose: $transpose'),
+            Text('ビブラート: $transpose'),
             //トランスポーズボタン
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            Column(
               children: [
-                ElevatedButton(
-                  onPressed: _incrementTranspose,
-                  child: const Text('+1'),
-                ),
-                const SizedBox(width: 16),
-                ElevatedButton(
-                  onPressed: _decrementTranspose,
-                  child: const Text('-1'),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: _incrementTranspose,
+                      child: const Text('弱'),
+                    ),
+                    const SizedBox(width: 16),
+                    ElevatedButton(
+                      onPressed: _decrementTranspose,
+                      child: const Text('強'),
+                    ),
+                  ],
                 ),
                 ElevatedButton(
                     onPressed: () {
                       ref.read(kimeraNotifierProvider.notifier).modeSelect();
                     },
-                    child: const Text('モードセレクト画面に戻る')),
+                    child: const Text('モードセレクト画面に戻る'))
               ],
             ),
           ],
