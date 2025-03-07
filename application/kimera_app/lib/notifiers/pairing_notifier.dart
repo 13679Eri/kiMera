@@ -62,6 +62,8 @@ class PairingNotifier extends _$PairingNotifier {
     _retryCount = 0;
     state = const Scanning();
 
+    debugPrint(_deviceNamePattern);
+
     _scanSubscription = _ble
         .scanForDevices(withServices: [], scanMode: ScanMode.lowLatency).listen(
       (device) {
