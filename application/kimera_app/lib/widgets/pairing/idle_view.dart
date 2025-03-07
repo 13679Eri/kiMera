@@ -13,8 +13,8 @@ class IdleView extends ConsumerStatefulWidget {
 
 class IdleViewState extends ConsumerState<IdleView> {
   final Map<String, String> map = <String, String>{
-    'ピンクのkiMera': 'kimera1',
-    '赤い透明なkiMera': 'kimera2',
+    'ピンクのkiMera': 'kiMera1',
+    'スイカのkiMera': 'kiMera2',
   };
   late final List<MenuEntry> menuEntries;
   late String dropdownValue;
