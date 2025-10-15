@@ -83,7 +83,7 @@ void serial_receve() {
     }
 
     M5.Lcd.setCursor(40, 100);
-    M5.Lcd.printf("ch = %d note = %d ring = %d　velo = %d", ch, note, ring, velo);
+    M5.Lcd.printf("ch = %d note = %d ring = %d velo = %d", ch, note, ring, velo);
   }
 }
 

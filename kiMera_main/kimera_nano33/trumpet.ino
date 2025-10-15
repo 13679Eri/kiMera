@@ -1,12 +1,6 @@
 void trumpet() {
   //タッチ
-  u16 result = 0;
-  u16 filtered_data_buf[CHANNEL_NUM] = { 0 };
-  u8 baseline_buf[CHANNEL_NUM] = { 0 };
-
-  result = mpr121.check_status_register();
-
-  mpr121.get_filtered_reg_data(&result, filtered_data_buf);
+  uint16_t result = cap.touched();
 
   for (int i = 0; i < CHANNEL_NUM; i++) {
     if (result & (1 << i)) { /*key i is pressed!!*/
@@ -20,7 +14,7 @@ void trumpet() {
     }
   }
 
-  pt = trunpet_patern(touch_status_flag[1], touch_status_flag[4], touch_status_flag[5]);
+  pt = trunpet_patern(touch_status_flag[0], touch_status_flag[1], touch_status_flag[2]);
 
   if (Serial1.available()) {      // 受信データを確認する
     mode = (byte)Serial1.read();
@@ -31,13 +25,13 @@ void trumpet() {
   }
 }
 
-int trunpet_patern(bool flag3, bool flag4, bool flag5) {
+int trunpet_patern(bool flag0, bool flag1, bool flag2) {
   ch = 3;
   int value = 0;
 
-  if (flag3) value |= 1 << 0;  // flag3 が true なら 0ビット目に1をセット
-  if (flag5) value |= 1 << 1;  // flag5 が true なら 2ビット目に1をセット
-  if (flag4) value |= 1 << 2;  // flag4 が true なら 1ビット目に1をセット
+  if (flag0) value |= 1 << 0;  // flag3 が true なら 0ビット目に1をセット
+  if (flag1) value |= 1 << 1;  // flag5 が true なら 2ビット目に1をセット
+  if (flag2) value |= 1 << 2;  // flag4 が true なら 1ビット目に1をセット
 
   // value の値に応じて数字を返す
   switch (value) {

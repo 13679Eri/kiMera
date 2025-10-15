@@ -1,17 +1,20 @@
 void set_sensor() {
   //タッチセンサ
-  s32 ret = 0;
-  if (mpr121.begin() < 0) {
-    Serial.println("Can't detect device!!!!");
+  // while (!Serial) delay(10);
+
+  if (!cap.begin(0x5A)) {
+    Serial.println("MPR121 not found, check wiring?");
+    while (1)
+      ;
   } else {
-    Serial.println("mpr121 init OK!");
+    Serial.println("MPR121 init OK!");
   }
-  mpr121.set_sensitivity(0x60);
 
   //気圧
   if (!lps35hw.begin_I2C()) {
     Serial.println("Couldn't find LPS35HW chip");
-    while (1);
+    while (1)
+      ;
   }
   Serial.println("Found LPS35HW chip");
   lps35hw.zeroPressure();
@@ -23,13 +26,7 @@ void flute() {
   float pressure = lps35hw.readPressure();
 
   //タッチ
-  u16 result = 0;
-  u16 filtered_data_buf[CHANNEL_NUM] = { 0 };
-  u8 baseline_buf[CHANNEL_NUM] = { 0 };
-
-  result = mpr121.check_status_register();
-
-  mpr121.get_filtered_reg_data(&result, filtered_data_buf);
+  uint16_t result = cap.touched();
 
   for (int i = 0; i < CHANNEL_NUM; i++) {
     if (result & (1 << i)) { /*key i is pressed!!*/
@@ -76,20 +73,20 @@ int flute_note() {
   ch = 4;
   int value = 0;
 
-  if (touch_status_flag[2]) value |= 1 << 0;   // flag3 が true なら 0ビット目に1をセット
-  if (touch_status_flag[1]) value |= 1 << 1;   // flag5 が true なら 2ビット目に1をセット
-  if (touch_status_flag[0]) value |= 1 << 2;   // flag4 が true なら 1ビット目に1をセット
-  if (touch_status_flag[8]) value |= 1 << 3;   // flag3 が true なら 3ビット目に1をセット
+  if (touch_status_flag[3]) value |= 1 << 0;   // flag3 が true なら 0ビット目に1をセット
+  if (touch_status_flag[4]) value |= 1 << 1;   // flag5 が true なら 2ビット目に1をセット
+  if (touch_status_flag[5]) value |= 1 << 2;   // flag4 が true なら 1ビット目に1をセット
+  if (touch_status_flag[6]) value |= 1 << 3;   // flag3 が true なら 3ビット目に1をセット
   if (touch_status_flag[9]) value |= 1 << 4;   // flag5 が true なら 4ビット目に1をセット
   if (touch_status_flag[10]) value |= 1 << 5;  // flag4 が true なら 5ビット目に1をセット
   if (touch_status_flag[11]) value |= 1 << 6;  // flag3 が true なら 0ビット目に1をセット
 
-  if (touch_status_flag[5]) value |= 1 << 7;  // flag5 が true なら 2ビット目に1をセット
-  if (touch_status_flag[4]) value |= 1 << 8;  // flag4 が true なら 1ビット目に1をセット
-  if (touch_status_flag[3]) value |= 1 << 9;  // flag3 が true なら 0ビット目に1をセット
+  if (touch_status_flag[1]) value |= 1 << 7;  // flag5 が true なら 2ビット目に1をセット
+  if (touch_status_flag[2]) value |= 1 << 8;  // flag4 が true なら 1ビット目に1をセット
+  if (touch_status_flag[0]) value |= 1 << 9;  // flag3 が true なら 0ビット目に1をセット
 
-  if (touch_status_flag[6]) value |= 1 << 10;  // flag5 が true なら 2ビット目に1をセット
-  if (touch_status_flag[7]) value |= 1 << 11;  // flag4 が true なら 1ビット目に1をセット
+  if (touch_status_flag[7]) value |= 1 << 10;  // flag5 が true なら 2ビット目に1をセット
+  if (touch_status_flag[8]) value |= 1 << 11;  // flag4 が true なら 1ビット目に1をセット
 
   // 7+,6-, 3,4,5, 11,10,9,8,0,1,2,
 

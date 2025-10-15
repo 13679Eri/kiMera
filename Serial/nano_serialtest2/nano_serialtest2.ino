@@ -55,6 +55,7 @@ void loop() {
   //もしモードが変わったらLEDチカチカさせる
   if (Serial1.available()) {
     byte Signal = (byte)Serial1.read();
+    Serial.print(Signal);
     for (int i = 0; i < 4; i++) {
       if (Signal == i + 1) {
         digitalWrite(i + 6, HIGH);

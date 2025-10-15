@@ -28,67 +28,88 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
     THE SOFTWARE.
 */
-#include "Seeed_MPR121_driver.h"
 
-Mpr121 mpr121;
+#include <Wire.h>
+#include "Adafruit_MPR121.h"
+
+#ifndef _BV
+#define _BV(bit) (1 << (bit))
+#endif
+
+Adafruit_MPR121 cap = Adafruit_MPR121();
 int note = 0;
 
-u16 touch_status_flag[CHANNEL_NUM] = {0};
-void setup() {
-    s32 ret = 0;
-    Serial.begin(115200);
-    if (mpr121.begin() < 0) {
-        Serial.println("Can't detect device!!!!");
-    } else {
-        Serial.println("mpr121 init OK!");
-    }
+uint16_t lasttouched = 0;
+uint16_t currtouched = 0;
 
-    /*  set 0x00~0xFF to sensitivity,the value
-        The higher the value, the higher the sensitivity of 4/5/6/7 channel
-        When the sensor is connected to items such as crocodile clip,
-        the value needs to be adjusted
-    */
-    mpr121.set_sensitivity(0x60);
-    delay(100);
+void setup() {
+  Serial.begin(115200);
+
+  while (!Serial) {  // needed to keep leonardo/micro from starting too fast!
+    delay(10);
+  }
+
+  Serial.println("Adafruit MPR121 Capacitive Touch sensor test");
+
+  // Default address is 0x5A, if tied to 3.3V its 0x5B
+  // If tied to SDA its 0x5C and if SCL then 0x5D
+  if (!cap.begin(0x5A)) {
+    Serial.println("MPR121 not found, check wiring?");
+    while (1)
+      ;
+  }
+  Serial.println("MPR121 found!");
 }
 
 void loop() {
-    u16 result = 0;
-    u16 filtered_data_buf[CHANNEL_NUM] = {0};
-    u8 baseline_buf[CHANNEL_NUM] = {0};
+  // Get the currently touched pads
+  currtouched = cap.touched();
 
-    result = mpr121.check_status_register();
-
-    mpr121.get_filtered_reg_data(&result, filtered_data_buf);
-
-    for (int i = 0; i < CHANNEL_NUM; i++) {
-        if (result & (1 << i)) {                      /*key i is pressed!!*/
-            if (0 == touch_status_flag[i]) {
-                touch_status_flag[i] = 1;
-                Serial.print("key ");
-                Serial.print(i);
-                Serial.println("pressed");
-            }
-        } else {
-            if (1 == touch_status_flag[i]) {
-                touch_status_flag[i] = 0;
-                Serial.print("key ");
-                Serial.print(i);
-                Serial.println("release");
-            }
-        }
+  for (uint8_t i = 0; i < 12; i++) {
+    // it if *is* touched and *wasnt* touched before, alert!
+    if ((currtouched & _BV(i)) && !(lasttouched & _BV(i))) {
+      Serial.print(i);
+      Serial.println(" touched");
     }
-//    send_note();
-//    Serial.println(note);
-    delay(50);
+    // if it *was* touched and now *isnt*, alert!
+    if (!(currtouched & _BV(i)) && (lasttouched & _BV(i))) {
+      Serial.print(i);
+      Serial.println(" released");
+    }
+  }
+
+  // reset our state
+  lasttouched = currtouched;
+
+  return;
+
+  // debugging info, what
+  Serial.print("\t\t\t\t\t\t\t\t\t\t\t\t\t 0x");
+  Serial.println(cap.touched(), HEX);
+  Serial.print("Filt: ");
+  for (uint8_t i = 0; i < 12; i++) {
+    Serial.print(cap.filteredData(i));
+    Serial.print("\t");
+  }
+  Serial.println();
+  Serial.print("Base: ");
+  for (uint8_t i = 0; i < 12; i++) {
+    Serial.print(cap.baselineData(i));
+    Serial.print("\t");
+  }
+  Serial.println();
+
+  send_note();
+  Serial.println(note);
+  delay(100);
 }
 
 void send_note() {
   /*
      5  7 9 3  2 1 10 0
   */
-  int fing[8] = {5, 7, 9, 3, 2, 1, 10, 0}; // 指の配列
-//  int note = -1; // 初期値として無効なノート番号を設定
+  int fing[8] = { 5, 7, 9, 3, 2, 1, 10, 0 };  // 指の配列
+                                              //  int note = -1; // 初期値として無効なノート番号を設定
 
   // 指遣いをビットマスクで表現（1: 押されている, 0: 離されている）
   int fingerPattern = 0;
@@ -101,31 +122,31 @@ void send_note() {
   // 指遣いに対応するノート番号を設定
   switch (fingerPattern) {
     case 0b11111111:
-      note = 60; // C（ド）
+      note = 60;  // C（ド）
       break;
     case 0b01111111:
-      note = 62; // D（レ）
+      note = 62;  // D（レ）
       break;
     case 0b00111111:
-      note = 64; // E（ミ）
+      note = 64;  // E（ミ）
       break;
     case 0b00011111:
-      note = 65; // F（ファ）
+      note = 65;  // F（ファ）
       break;
     case 0b00001111:
-      note = 67; // G（ソ）
+      note = 67;  // G（ソ）
       break;
     case 0b00000111:
-      note = 69; // A（ラ）
+      note = 69;  // A（ラ）
       break;
     case 0b00000011:
-      note = 71; // B（シ）
+      note = 71;  // B（シ）
       break;
     case 0b00000101:
-      note = 72; // C（高いド）
+      note = 72;  // C（高いド）
       break;
     case 0b00000100:
-      note = 74; // D（高いレ）
+      note = 74;  // D（高いレ）
     // 他の指遣いパターンを追加
     default:
       // 必要に応じてデフォルトの処理を追加

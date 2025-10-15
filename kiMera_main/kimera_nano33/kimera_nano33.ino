@@ -1,11 +1,15 @@
-#include "Seeed_MPR121_driver.h"
+#include <Wire.h>
+#include "Adafruit_MPR121.h"
 #include <Adafruit_LPS35HW.h>
 #include <Arduino_LSM6DS3.h>
 
+#define CHANNEL_NUM 12
+
 //タッチセンサ　気圧
-Mpr121 mpr121;
-u16 touch_status_flag[CHANNEL_NUM] = { 0 };
 Adafruit_LPS35HW lps35hw = Adafruit_LPS35HW();
+Adafruit_MPR121 cap = Adafruit_MPR121();
+uint16_t touch_status_flag[CHANNEL_NUM] = { 0 };
+
 
 float baselinePressure;
 unsigned long updatetime = 0;
