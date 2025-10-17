@@ -42,7 +42,6 @@ float mainbody_ag = 0;
 #define PIN_DATA 27
 #define MODE_MIC 0
 
-
 int patern = 0;
 
 //MIDI
